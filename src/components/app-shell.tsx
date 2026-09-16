@@ -1,36 +1,47 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
-import {
-  ChevronDown,
-  FileCheck2,
-  Gift,
-  LayoutDashboard,
-  Menu,
-  Users,
-  X,
-} from "lucide-react";
+import { Check, ChevronsUpDown, FileCheck2, Gift, LayoutDashboard, Menu, Users, X } from "lucide-react";
 import { useState } from "react";
 
+import { BrandMark } from "@/components/brand";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useI18n } from "@/lib/i18n";
+import { actions, useAppState } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
-const navigation = [
-  { label: "Campaigns", to: "/", icon: LayoutDashboard },
-  { label: "Gift Templates", to: "/templates", icon: Gift },
-  { label: "Recipients", to: "/recipients", icon: Users },
-  { label: "Quote Review", to: "/quote-review", icon: FileCheck2 },
-] as const;
+/** Routes rendered without the sidebar (recipient-facing pages). */
+const STANDALONE_PREFIXES = ["/confirm"];
 
 export function AppShell() {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const { m } = useI18n();
+
+  if (STANDALONE_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+    return <Outlet />;
+  }
+
+  const navigation = [
+    { label: m.nav.campaigns, to: "/", icon: LayoutDashboard, match: (p: string) => p === "/" || p.startsWith("/campaigns") },
+    { label: m.nav.templates, to: "/templates", icon: Gift, match: (p: string) => p.startsWith("/templates") },
+    { label: m.nav.recipients, to: "/recipients", icon: Users, match: (p: string) => p.startsWith("/recipients") },
+    { label: m.nav.quoteReview, to: "/quote-review", icon: FileCheck2, match: (p: string) => p.startsWith("/quote-review") },
+  ] as const;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center border-b border-border bg-background px-4 lg:hidden">
+      <header className="sticky top-0 z-30 grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center border-b border-border bg-background/95 px-3 backdrop-blur lg:hidden">
         <Button
           variant="ghost"
           size="icon"
-          aria-label={open ? "Close navigation" : "Open navigation"}
+          aria-label={open ? m.nav.close : m.nav.open}
           onClick={() => setOpen((value) => !value)}
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -42,7 +53,7 @@ export function AppShell() {
       {open && (
         <button
           type="button"
-          aria-label="Close navigation overlay"
+          aria-label={m.nav.close}
           className="fixed inset-0 z-30 bg-overlay lg:hidden"
           onClick={() => setOpen(false)}
         />
@@ -54,21 +65,24 @@ export function AppShell() {
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-28 items-center border-b border-sidebar-border px-8">
+        <div className="flex h-28 items-center border-b border-sidebar-border px-7">
           <BrandMark />
         </div>
 
-        <nav className="flex-1 px-4 py-8" aria-label="Main navigation">
-          <p className="px-4 pb-4 text-xs font-medium uppercase text-muted-foreground">Gift atelier</p>
+        <nav className="flex-1 overflow-y-auto px-4 py-8" aria-label={m.nav.main}>
+          <p className="px-4 pb-4 text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+            {m.nav.section}
+          </p>
           <ul className="space-y-1">
             {navigation.map((item) => {
-              const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+              const active = item.match(pathname);
               const Icon = item.icon;
               return (
                 <li key={item.to}>
                   <Link
                     to={item.to}
                     onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
                       "group grid h-12 grid-cols-[1.25rem_minmax(0,1fr)_auto] items-center gap-3 rounded-sm px-4 text-sm transition-colors",
                       active
@@ -78,7 +92,7 @@ export function AppShell() {
                   >
                     <Icon className="size-[1.125rem] shrink-0" strokeWidth={1.6} />
                     <span className="truncate">{item.label}</span>
-                    {active && <span className="size-1.5 rounded-full bg-brand" aria-label="Current page" />}
+                    {active && <span className="size-1.5 rounded-full bg-brand" aria-hidden="true" />}
                   </Link>
                 </li>
               );
@@ -87,21 +101,7 @@ export function AppShell() {
         </nav>
 
         <div className="border-t border-sidebar-border p-4">
-          <button
-            type="button"
-            className="grid w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-sidebar-accent"
-          >
-            <span className="grid size-10 place-items-center rounded-sm bg-workspace text-sm font-semibold text-workspace-foreground">
-              AC
-            </span>
-            <span className="min-w-0">
-              <span className="block truncate text-sm font-medium text-sidebar-foreground">Alpen & Co. AG</span>
-              <span className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-                <span className="size-1.5 rounded-full bg-status" /> Active workspace
-              </span>
-            </span>
-            <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
-          </button>
+          <WorkspaceSwitcher />
         </div>
       </aside>
 
@@ -112,11 +112,51 @@ export function AppShell() {
   );
 }
 
-function BrandMark({ compact = false }: { compact?: boolean }) {
+function WorkspaceSwitcher() {
+  const { m } = useI18n();
+  const { companies, activeCompanyId } = useAppState();
+  const active = companies.find((c) => c.id === activeCompanyId) ?? companies[0];
+  if (!active) return null;
+
   return (
-    <div className={cn("min-w-0", compact && "text-center")} aria-label="Fabrikat Gift Atelier">
-      <div className="font-display text-[1.15rem] font-semibold uppercase text-foreground">Fabrikat</div>
-      <div className="mt-0.5 text-[0.625rem] font-medium uppercase text-muted-foreground">Gift Atelier · Zürich</div>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label={m.workspace.switch}
+          className="grid w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <span className="grid size-10 place-items-center rounded-sm bg-workspace text-sm font-semibold text-workspace-foreground">
+            {active.initials}
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-medium text-sidebar-foreground">{active.name}</span>
+            <span className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className="size-1.5 rounded-full bg-status" /> {m.workspace.active}
+            </span>
+          </span>
+          <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="top" align="start" className="w-[17rem]">
+        <DropdownMenuLabel className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+          {m.workspace.heading}
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {companies.map((company) => (
+          <DropdownMenuItem
+            key={company.id}
+            onSelect={() => actions.setActiveCompany(company.id)}
+            className="gap-3 py-2.5"
+          >
+            <span className="grid size-8 place-items-center rounded-sm bg-secondary text-xs font-semibold">
+              {company.initials}
+            </span>
+            <span className="min-w-0 flex-1 truncate">{company.name}</span>
+            {company.id === active.id && <Check className="size-4 text-brand" />}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

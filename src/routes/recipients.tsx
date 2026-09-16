@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Users } from "lucide-react";
 
-import { EmptyState, PageIntro } from "@/components/empty-state";
+import { EmptyState, PageContainer, PageIntro } from "@/components/empty-state";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/recipients")({
   head: () => ({ meta: [
@@ -12,12 +13,22 @@ export const Route = createFileRoute("/recipients")({
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),
-  component: RecipientsPage,
+  component: Page,
 });
 
-function RecipientsPage() {
-  return <div className="mx-auto max-w-[90rem] px-5 py-12 sm:px-10 sm:py-16 xl:px-16 xl:py-20">
-    <PageIntro eyebrow="People & delivery" title="Recipient Manager" description="Keep every name, address, and personal detail considered and in one place." />
-    <EmptyState icon={Users} eyebrow="No recipients yet" title="Begin with the people." description="Add recipients individually or bring in your prepared list to begin planning delivery." action="Add recipients" />
-  </div>;
+function Page() {
+  const { m } = useI18n();
+  const t = m.pages.recipients;
+  return (
+    <PageContainer>
+      <PageIntro eyebrow={t.eyebrow} title={t.title} description={t.description} />
+      <EmptyState
+        icon={Users}
+        eyebrow={t.emptyEyebrow}
+        title={t.emptyTitle}
+        description={t.emptyBody}
+        action={{ label: t.emptyAction, to: "/" }}
+      />
+    </PageContainer>
+  );
 }
