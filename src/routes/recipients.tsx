@@ -13,10 +13,10 @@ export const Route = createFileRoute("/recipients")({
   validateSearch: z.object({ campaign: z.string().optional() }),
   head: () => ({
     meta: [
-      { title: "Recipient Manager — Fabrikat Gift Atelier" },
+      { title: "Empfänger — Fabrikat Gift Atelier" },
       {
         name: "description",
-        content: "Collect and confirm recipient addresses for your Fabrikat gifting campaign.",
+        content: "Empfängeradressen für Ihre Fabrikat-Geschenkkampagne sammeln und bestätigen.",
       },
     ],
   }),

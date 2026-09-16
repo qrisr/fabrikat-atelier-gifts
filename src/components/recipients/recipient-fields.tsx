@@ -122,7 +122,7 @@ export function RecipientFields({
         <Input
           id={id("street")}
           autoComplete="street-address"
-          placeholder="Bahnhofstrasse 1"
+          placeholder={m.recipients.streetPlaceholder}
           value={draft.address.street}
           onChange={(e) => setAddress({ street: e.target.value })}
         />
@@ -145,7 +145,7 @@ export function RecipientFields({
           <Input
             id={id("city")}
             autoComplete="address-level2"
-            placeholder="Zürich"
+            placeholder={m.recipients.cityPlaceholder}
             value={draft.address.city}
             onChange={(e) => setAddress({ city: e.target.value })}
           />

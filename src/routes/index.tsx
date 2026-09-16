@@ -17,15 +17,17 @@ import { recipientCount, useAppState } from "@/lib/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Campaign Dashboard — Fabrikat Gift Atelier" },
+      { title: "Kampagnen — Fabrikat Gift Atelier" },
       {
         name: "description",
-        content: "Plan and manage premium year-end gifting campaigns with Fabrikat.",
+        content:
+          "Hochwertige Jahresendgeschenke für Ihr Unternehmen planen und verwalten — mit Fabrikat.",
       },
-      { property: "og:title", content: "Campaign Dashboard — Fabrikat Gift Atelier" },
+      { property: "og:title", content: "Kampagnen — Fabrikat Gift Atelier" },
       {
         property: "og:description",
-        content: "Plan and manage premium year-end gifting campaigns with Fabrikat.",
+        content:
+          "Hochwertige Jahresendgeschenke für Ihr Unternehmen planen und verwalten — mit Fabrikat.",
       },
     ],
   }),

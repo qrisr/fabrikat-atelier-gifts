@@ -33,3 +33,24 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Stand und Dokumentation
+
+Umgesetzt sind die Schritte 1–16 des Produkt-Briefings: Marken-Grundgerüst, Kampagnen-Dashboard,
+geführter Ablauf (Eckdaten → Geschenkset → Personalisierung → Empfänger → Offerte),
+Speicherung (Browser oder Lovable Cloud), Statusverfolgung, Google-Sheets-Export,
+Pipeline für Fabrikat (statt HubSpot), Resend-E-Mails, leere Zustände, Fehlermeldungen,
+Deutsch/Englisch mit Schweizer Formaten.
+
+- `docs/BACKEND.md`: Lovable Cloud aktivieren, Migrationen, Regeln, lokal testen
+- `docs/INTEGRATIONS.md`: Secrets, Google Apps Script, Hook, Resend, Pipeline
+
+```sh
+bun install
+bun run dev        # http://localhost:8080
+bun run test       # Vitest
+bun run build
+```
+
+Hinweis: Sortiment, Hersteller und Preise in `src/lib/catalog.ts` sind Platzhalter und müssen durch
+Fabrikats bestätigtes Angebot ersetzt werden (danach `bun scripts/export-catalog-sql.ts`).

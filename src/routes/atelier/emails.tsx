@@ -13,13 +13,13 @@ import {
 
 export const Route = createFileRoute("/atelier/emails")({
   head: () => ({
-    meta: [{ title: "Email previews — Fabrikat" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "E-Mail-Vorschau — Fabrikat" }, { name: "robots", content: "noindex" }],
   }),
   component: EmailPreviews,
 });
 
 function EmailPreviews() {
-  const { m } = useI18n();
+  const { m, lang } = useI18n();
   const state = useAppState();
   const [active, setActive] = useState(0);
 
@@ -30,7 +30,7 @@ function EmailPreviews() {
     if (!campaign || typeof window === "undefined") return [];
     const company = state.companies.find((c) => c.id === campaign.companyId) ?? state.companies[0]!;
     const recipients = state.recipients.filter((r) => r.campaignId === campaign.id);
-    const ctx = { campaign, company, recipients, baseUrl: window.location.origin };
+    const ctx = { campaign, company, recipients, baseUrl: window.location.origin, lang };
     const sampleRecipient = recipients[0] ?? {
       id: "sample",
       campaignId: campaign.id,
@@ -46,23 +46,19 @@ function EmailPreviews() {
       createdAt: campaign.createdAt,
     };
     return [
-      { label: "Recipient invitation", email: recipientInviteEmail(ctx, sampleRecipient) },
-      { label: "Quote received", email: quoteReceivedEmail(ctx) },
-      { label: "Under review", email: statusUpdateEmail(ctx, "under_review")! },
+      { label: m.atelier.emailKinds.invite, email: recipientInviteEmail(ctx, sampleRecipient) },
+      { label: m.atelier.emailKinds.received, email: quoteReceivedEmail(ctx) },
+      { label: m.atelier.emailKinds.underReview, email: statusUpdateEmail(ctx, "under_review")! },
       {
         label: "Offer approved",
-        email: statusUpdateEmail(ctx, "approved", "Delivery in two waves is possible.")!,
+        email: statusUpdateEmail(ctx, "approved", m.atelier.sampleNoteApproved)!,
       },
       {
         label: "Changes requested",
-        email: statusUpdateEmail(
-          ctx,
-          "changes_requested",
-          "The walnut knife is sold out — may we suggest the olive wood edition?",
-        )!,
+        email: statusUpdateEmail(ctx, "changes_requested", m.atelier.sampleNoteChanges)!,
       },
     ];
-  }, [state]);
+  }, [state, m, lang]);
 
   const current = emails[active];
 
@@ -93,7 +89,9 @@ function EmailPreviews() {
         {current && (
           <div className="overflow-hidden rounded-sm border border-border bg-card">
             <div className="border-b border-border px-5 py-3 text-sm">
-              <p className="text-muted-foreground">To: {current.email.to || "–"}</p>
+              <p className="text-muted-foreground">
+                {m.atelier.emailTo}: {current.email.to || "–"}
+              </p>
               <p className="font-medium">{current.email.subject}</p>
             </div>
             <iframe

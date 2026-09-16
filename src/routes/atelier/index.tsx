@@ -12,7 +12,7 @@ import { useAppState } from "@/lib/store";
 
 export const Route = createFileRoute("/atelier/")({
   head: () => ({
-    meta: [{ title: "Atelier pipeline — Fabrikat" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Atelier-Pipeline — Fabrikat" }, { name: "robots", content: "noindex" }],
   }),
   component: Pipeline,
 });
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/atelier/")({
 const COLUMNS = ["submitted", "under_review", "changes_requested", "approved"] as const;
 
 function Pipeline() {
-  const { m, chf } = useI18n();
+  const { m, chf, lang } = useI18n();
   const state = useAppState();
 
   const byStatus = useMemo(() => {

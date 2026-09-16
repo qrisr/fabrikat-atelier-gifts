@@ -9,7 +9,7 @@ import { actions } from "@/lib/store";
 
 export const Route = createFileRoute("/campaigns/new")({
   validateSearch: z.object({ template: z.string().optional() }),
-  head: () => ({ meta: [{ title: "New campaign — Fabrikat Gift Atelier" }] }),
+  head: () => ({ meta: [{ title: "Neue Kampagne — Fabrikat Gift Atelier" }] }),
   component: NewCampaign,
 });
 

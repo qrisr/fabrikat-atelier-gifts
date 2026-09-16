@@ -40,7 +40,7 @@ export function BrandMark({ compact = false }: { compact?: boolean }) {
         <div className="font-display text-[1.2rem] uppercase leading-none tracking-[0.18em] text-foreground">
           {m.brand.wordmark}
         </div>
-        <div className="mt-1.5 text-[0.625rem] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+        <div className="mt-1.5 whitespace-nowrap text-[0.625rem] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           {m.brand.subline}
         </div>
       </div>

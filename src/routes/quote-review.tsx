@@ -13,10 +13,10 @@ export const Route = createFileRoute("/quote-review")({
   validateSearch: z.object({ campaign: z.string().optional() }),
   head: () => ({
     meta: [
-      { title: "Quote Review — Fabrikat Gift Atelier" },
+      { title: "Offerte — Fabrikat Gift Atelier" },
       {
         name: "description",
-        content: "Review the details and quotation for your Fabrikat gifting campaign.",
+        content: "Details und Offerte Ihrer Fabrikat-Geschenkkampagne prüfen.",
       },
     ],
   }),

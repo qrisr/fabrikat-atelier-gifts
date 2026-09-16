@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { SwissDateInput } from "@/components/swiss-date-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,7 +79,7 @@ export function CampaignDetailsForm({
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} method="post" className="grid gap-8" noValidate>
-      <fieldset disabled={disabled} className="grid gap-8 disabled:opacity-70">
+      <fieldset disabled={disabled} className="grid min-w-0 gap-8 disabled:opacity-70">
         <Field
           id="name"
           label={m.details.name}
@@ -157,12 +158,18 @@ export function CampaignDetailsForm({
           hint={m.details.deliveryHint}
           error={errors.deliveryDate?.message}
         >
-          <Input
-            id="deliveryDate"
-            type="date"
-            lang="de-CH"
-            className="sm:max-w-xs"
-            {...form.register("deliveryDate")}
+          <Controller
+            control={form.control}
+            name="deliveryDate"
+            render={({ field }) => (
+              <SwissDateInput
+                id="deliveryDate"
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                disabled={disabled}
+              />
+            )}
           />
         </Field>
       </fieldset>
@@ -193,7 +200,7 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <div className="grid gap-2.5">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5">
       <Label htmlFor={id} className="text-sm font-medium">
         {label}
       </Label>

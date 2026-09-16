@@ -28,17 +28,19 @@ const base = z.object({
   campaignId: z.string().min(1).max(80),
   accessToken: z.string().max(4000).nullable().optional(),
   demo: demoSchema,
+  lang: z.enum(["de", "en"]).optional(),
 });
 
 const baseUrl = () => new URL(getRequest().url).origin;
 
 async function context(input: z.infer<typeof base>) {
-  return loadContext({
+  const loaded = await loadContext({
     campaignId: input.campaignId,
     accessToken: input.accessToken ?? null,
     demo: (input.demo as DemoPayload | null | undefined) ?? null,
     baseUrl: baseUrl(),
   });
+  return { ...loaded, ctx: { ...loaded.ctx, lang: input.lang ?? "de" } };
 }
 
 function failure(error: unknown) {

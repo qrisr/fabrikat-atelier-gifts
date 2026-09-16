@@ -10,6 +10,16 @@ export const en = {
     wordmark: "Fabrikat",
     subline: "Gift Atelier · Zürich",
   },
+  language: {
+    label: "Language",
+    de: "Deutsch",
+    en: "English",
+  },
+  date: {
+    placeholder: "DD.MM.YYYY",
+    open: "Open calendar",
+    invalid: "Please enter the date as DD.MM.YYYY.",
+  },
   nav: {
     section: "Gift atelier",
     campaigns: "Campaigns",
@@ -67,6 +77,16 @@ export const en = {
     emails: "Email previews",
     emailsTitle: "Email previews",
     emailsIntro: "How Fabrikat's transactional emails look, rendered with a sample campaign.",
+    emailTo: "To",
+    emailKinds: {
+      invite: "Recipient invitation",
+      received: "Quote received",
+      underReview: "Under review",
+      approved: "Offer approved",
+      changes: "Changes requested",
+    },
+    sampleNoteApproved: "Delivery in two waves is possible.",
+    sampleNoteChanges: "The walnut knife is sold out — may we suggest the olive wood edition?",
   },
   review: {
     title: "Fabrikat review",
@@ -310,6 +330,9 @@ export const en = {
     email: "Email",
     address: "Shipping address",
     statusCol: "Status",
+    actionsCol: "Actions",
+    streetPlaceholder: "Bahnhofstrasse 1",
+    cityPlaceholder: "Zürich",
     addressMissing: "Address pending",
     statusLabel: { pending: "Pending", link_sent: "Link sent", confirmed: "Confirmed" },
     sendLinks: "Send confirmation emails",

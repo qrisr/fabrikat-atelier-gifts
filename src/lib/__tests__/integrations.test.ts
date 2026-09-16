@@ -19,6 +19,7 @@ function context() {
     company: data.companies[0]!,
     recipients: data.recipients.filter((r) => r.campaignId === campaign.id),
     baseUrl: "https://gifts.example.ch",
+    lang: "en" as const,
   };
 }
 
@@ -40,6 +41,14 @@ describe("email templates", () => {
     const email = statusUpdateEmail(context(), "approved")!;
     expect(email.html).toContain("Total incl. VAT");
     expect(email.html).toContain("05.12.2026");
+  });
+
+  it("defaults to Swiss German", () => {
+    const { lang: _lang, ...ctx } = context();
+    const email = statusUpdateEmail(ctx, "approved")!;
+    expect(email.subject).toBe("Ihre Offerte ist bereit — Team-Weihnachten 2026");
+    expect(email.html).toContain("Total inkl. MWST");
+    expect(email.html).toContain('lang="de-CH"');
   });
 
   it("escapes user content", () => {

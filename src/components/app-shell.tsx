@@ -16,6 +16,7 @@ import { toast } from "sonner";
 
 import { BrandMark } from "@/components/brand";
 import { CompanySettingsDialog } from "@/components/company-settings-dialog";
+import { LanguageToggle } from "@/components/language-toggle";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -96,7 +97,7 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center border-b border-border bg-background/95 px-3 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-30 grid h-16 grid-cols-[4.75rem_minmax(0,1fr)_4.75rem] items-center border-b border-border bg-background/95 px-3 backdrop-blur lg:hidden">
         <Button
           variant="ghost"
           size="icon"
@@ -106,7 +107,7 @@ export function AppShell() {
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </Button>
         <BrandMark compact />
-        <span className="size-11" aria-hidden="true" />
+        <LanguageToggle />
       </header>
 
       {open && (
@@ -124,8 +125,9 @@ export function AppShell() {
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-28 items-center border-b border-sidebar-border px-7">
+        <div className="flex h-28 items-center justify-between gap-3 border-b border-sidebar-border pl-7 pr-4">
           <BrandMark />
+          <LanguageToggle className="hidden lg:inline-flex" />
         </div>
 
         <nav className="flex-1 overflow-y-auto px-4 py-8" aria-label={m.nav.main}>

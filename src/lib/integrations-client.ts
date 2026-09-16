@@ -18,11 +18,13 @@ type Outcome = { status: "sent" | "skipped" | "dry_run" | "failed"; detail?: str
 
 async function base(campaignId: string) {
   const state = getState();
+  const lang = document.documentElement.lang.startsWith("en") ? ("en" as const) : ("de" as const);
   const accessToken = await getRepository().getAccessToken();
   const campaign = state.campaigns.find((c) => c.id === campaignId);
   const company = state.companies.find((c) => c.id === campaign?.companyId);
   return {
     campaignId,
+    lang,
     accessToken,
     demo:
       state.backend === "local" && campaign && company

@@ -9,15 +9,15 @@ import { useI18n } from "@/lib/i18n";
 export const Route = createFileRoute("/templates")({
   head: () => ({
     meta: [
-      { title: "Gift Templates — Fabrikat Gift Atelier" },
+      { title: "Geschenksets — Fabrikat Gift Atelier" },
       {
         name: "description",
-        content: "Explore curated Swiss gift sets for your company recipients.",
+        content: "Kuratierte Geschenksets aus Schweizer Manufakturen für Ihre Empfänger.",
       },
-      { property: "og:title", content: "Gift Templates — Fabrikat Gift Atelier" },
+      { property: "og:title", content: "Geschenksets — Fabrikat Gift Atelier" },
       {
         property: "og:description",
-        content: "Explore curated Swiss gift sets for your company recipients.",
+        content: "Kuratierte Geschenksets aus Schweizer Manufakturen für Ihre Empfänger.",
       },
     ],
   }),

@@ -2,12 +2,15 @@
  * Localisation: typed message catalogues and Swiss formatting helpers.
  * Every visible string goes through `useI18n().m`.
  */
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import type { Lang, Localized } from "@/lib/catalog";
+import { de } from "@/lib/messages/de";
 import { en, type Messages } from "@/lib/messages/en";
 
-const catalogues: Record<Lang, Messages> = { en, de: en };
+const catalogues: Record<Lang, Messages> = { de, en };
+const LANG_KEY = "fabrikat-atelier:lang";
+export const DEFAULT_LANG: Lang = "de";
 
 type I18n = {
   lang: Lang;
@@ -24,8 +27,33 @@ type I18n = {
 const I18nContext = createContext<I18n | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>("en");
-  const value = useMemo(() => createI18n(lang, setLang), [lang]);
+  const [lang, setLangState] = useState<Lang>(DEFAULT_LANG);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(LANG_KEY);
+      if (stored === "de" || stored === "en") setLangState(stored);
+    } catch {
+      /* storage unavailable — keep default */
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang === "de" ? "de-CH" : "en-CH";
+  }, [lang]);
+
+  const value = useMemo(
+    () =>
+      createI18n(lang, (next) => {
+        setLangState(next);
+        try {
+          window.localStorage.setItem(LANG_KEY, next);
+        } catch {
+          /* ignore */
+        }
+      }),
+    [lang],
+  );
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

@@ -64,7 +64,7 @@ function PersonalizeStep() {
         <h1 className="font-display text-4xl">{m.personalize.title}</h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">{m.personalize.intro}</p>
 
-        <fieldset disabled={locked} className="mt-10 space-y-12 disabled:opacity-70">
+        <fieldset disabled={locked} className="mt-10 min-w-0 space-y-12 disabled:opacity-70">
           <Section title={m.personalize.wrapping}>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 2xl:grid-cols-5">
               {WRAPPINGS.map((wrapping) => (
@@ -129,7 +129,7 @@ function PersonalizeStep() {
               ))}
             </div>
 
-            <div className="mt-8 grid gap-2.5">
+            <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-2.5">
               <Label htmlFor="card-message">{m.personalize.message}</Label>
               <Textarea
                 id="card-message"
@@ -353,7 +353,7 @@ function LogoUpload({
   }
 
   return (
-    <div className="mt-8 grid gap-2.5">
+    <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-2.5">
       <Label htmlFor={inputId}>{m.personalize.logo}</Label>
       <div className="flex flex-wrap items-center gap-4 rounded-sm border border-dashed border-border bg-card p-4">
         <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-sm bg-secondary">

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SearchX } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { LanguageToggle } from "@/components/language-toggle";
 import { ConfirmForm } from "@/components/recipients/confirm-form";
 import { getRepository } from "@/lib/data";
 import type { ConfirmationData } from "@/lib/data/types";
@@ -11,7 +12,7 @@ import { actions, getState } from "@/lib/store";
 export const Route = createFileRoute("/confirm/$token")({
   head: () => ({
     meta: [
-      { title: "Confirm your delivery address — Fabrikat" },
+      { title: "Lieferadresse bestätigen — Fabrikat" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -36,7 +37,10 @@ function ConfirmPage() {
   }, [token]);
 
   return (
-    <div className="min-h-screen bg-background px-4 py-8 sm:py-16">
+    <div className="min-h-screen bg-background px-4 py-6 sm:py-12">
+      <div className="mx-auto mb-4 flex w-full max-w-lg justify-end">
+        <LanguageToggle />
+      </div>
       <main className="mx-auto w-full max-w-lg rounded-sm border border-border bg-card px-5 py-8 shadow-[0_30px_60px_-45px_rgba(58,46,37,0.5)] sm:px-10 sm:py-12">
         {context === undefined ? (
           <p className="py-16 text-center text-sm text-muted-foreground" role="status">

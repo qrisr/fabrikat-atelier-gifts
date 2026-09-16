@@ -158,7 +158,7 @@ export function RecipientsManager({
               <span>{m.recipients.name}</span>
               <span>{m.recipients.address}</span>
               <span>{m.recipients.statusCol}</span>
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">{m.recipients.actionsCol}</span>
             </div>
             <ul className="divide-y divide-border">
               {visible.map((recipient) => (

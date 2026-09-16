@@ -10,7 +10,7 @@ import { useCampaign } from "@/lib/use-campaign";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/campaigns/$campaignId")({
-  head: () => ({ meta: [{ title: "Campaign — Fabrikat Gift Atelier" }] }),
+  head: () => ({ meta: [{ title: "Kampagne — Fabrikat Gift Atelier" }] }),
   component: CampaignLayout,
 });
 
