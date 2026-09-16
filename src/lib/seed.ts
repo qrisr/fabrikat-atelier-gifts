@@ -1,0 +1,103 @@
+/**
+ * Demo workspace content for "Alpen & Co. AG". Deterministic ids and dates so
+ * server render and client hydration match. "Seeblick Treuhand" stays empty
+ * to show the first-run experience.
+ */
+import { type Campaign, type Recipient, defaultPersonalization } from "@/lib/domain";
+
+const created = "2026-09-01T09:00:00.000Z";
+
+export const seedCampaigns: Campaign[] = [
+  {
+    id: "c-kunden-2026",
+    companyId: "alpen-co",
+    name: "Kundengeschenk Jahresende 2026",
+    occasion: "customer_appreciation",
+    recipientEstimate: 60,
+    budgetPerRecipient: 150,
+    deliveryDate: "2026-12-12",
+    templateId: "schreibtisch",
+    personalization: {
+      ...defaultPersonalization(),
+      wrappingId: "forest",
+      stickerId: "winter-forest",
+      cardId: "letterpress",
+      cardMessage: "Herzlichen Dank für die gute Zusammenarbeit in diesem Jahr.",
+      engravings: { "sd-pen": { enabled: true, text: "Alpen & Co." } },
+    },
+    status: "under_review",
+    shareToken: "seed-share-kunden",
+    submittedAt: "2026-09-10T14:20:00.000Z",
+    snapshot: null,
+    createdAt: created,
+    updatedAt: "2026-09-12T08:00:00.000Z",
+  },
+  {
+    id: "c-team-2026",
+    companyId: "alpen-co",
+    name: "Team-Weihnachten 2026",
+    occasion: "year_end",
+    recipientEstimate: 45,
+    budgetPerRecipient: 95,
+    deliveryDate: "2026-12-05",
+    templateId: "winterabend",
+    personalization: { ...defaultPersonalization(), stickerId: "christmas" },
+    status: "draft",
+    shareToken: "seed-share-team",
+    submittedAt: null,
+    snapshot: null,
+    createdAt: created,
+    updatedAt: "2026-09-14T16:30:00.000Z",
+  },
+  {
+    id: "c-partner-2026",
+    companyId: "alpen-co",
+    name: "Partner-Präsent Verwaltungsrat",
+    occasion: "partner_gift",
+    recipientEstimate: 8,
+    budgetPerRecipient: 260,
+    deliveryDate: "2026-12-01",
+    templateId: "grand",
+    personalization: { ...defaultPersonalization(), wrappingId: "gold-foil", cardId: "deckle" },
+    status: "approved",
+    shareToken: "seed-share-partner",
+    submittedAt: "2026-08-28T10:00:00.000Z",
+    snapshot: null,
+    createdAt: "2026-08-20T09:00:00.000Z",
+    updatedAt: "2026-09-05T11:00:00.000Z",
+  },
+];
+
+const r = (
+  id: string,
+  campaignId: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  street: string,
+  postalCode: string,
+  city: string,
+  canton: string,
+  status: Recipient["status"],
+): Recipient => ({
+  id,
+  campaignId,
+  firstName,
+  lastName,
+  email,
+  company: "",
+  address: { street, postalCode, city, canton },
+  status,
+  preferences: {},
+  token: `seed-${id}`,
+  confirmedAt: status === "confirmed" ? "2026-09-08T10:00:00.000Z" : null,
+  createdAt: created,
+});
+
+export const seedRecipients: Recipient[] = [
+  r("r1", "c-team-2026", "Lea", "Meier", "lea.meier@alpen-co.ch", "Seefeldstrasse 12", "8008", "Zürich", "ZH", "confirmed"),
+  r("r2", "c-team-2026", "Jonas", "Huber", "jonas.huber@alpen-co.ch", "Bahnhofplatz 3", "3011", "Bern", "BE", "link_sent"),
+  r("r3", "c-team-2026", "Sara", "Rossi", "sara.rossi@alpen-co.ch", "", "", "", "", "pending"),
+  r("r4", "c-partner-2026", "Thomas", "Frei", "t.frei@frei-partner.ch", "Rigistrasse 40", "6300", "Zug", "ZG", "confirmed"),
+  r("r5", "c-partner-2026", "Claudia", "Weber", "c.weber@weber-holding.ch", "Aeschenvorstadt 21", "4051", "Basel", "BS", "confirmed"),
+];

@@ -16,7 +16,7 @@ type EmptyStateProps = {
 
 export function EmptyState({ icon: Icon, eyebrow, title, description, action, illustration, children }: EmptyStateProps) {
   return (
-    <section className="grid min-h-[28rem] place-items-center border-y border-border py-16 text-center">
+    <section className="grid min-h-[28rem] place-items-center border-b border-border py-16 text-center">
       <div className="max-w-xl px-5">
         {illustration ?? (
           <div className="mx-auto mb-8 grid size-16 place-items-center rounded-full border border-border bg-secondary">

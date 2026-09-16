@@ -13,6 +13,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuoteReviewRouteImport } from './routes/quote-review'
 import { Route as RecipientsRouteImport } from './routes/recipients'
 import { Route as TemplatesRouteImport } from './routes/templates'
+import { Route as CampaignsCampaignIdRouteImport } from './routes/campaigns/$campaignId'
+import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
+import { Route as CampaignsCampaignIdIndexRouteImport } from './routes/campaigns/$campaignId/index'
+import { Route as CampaignsCampaignIdDetailsRouteImport } from './routes/campaigns/$campaignId/details'
+import { Route as CampaignsCampaignIdPersonalizeRouteImport } from './routes/campaigns/$campaignId/personalize'
+import { Route as CampaignsCampaignIdQuoteRouteImport } from './routes/campaigns/$campaignId/quote'
+import { Route as CampaignsCampaignIdRecipientsRouteImport } from './routes/campaigns/$campaignId/recipients'
+import { Route as CampaignsCampaignIdTemplateRouteImport } from './routes/campaigns/$campaignId/template'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +42,79 @@ const TemplatesRoute = TemplatesRouteImport.update({
   path: '/templates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CampaignsCampaignIdRoute = CampaignsCampaignIdRouteImport.update({
+  id: '/campaigns/$campaignId',
+  path: '/campaigns/$campaignId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampaignsNewRoute = CampaignsNewRouteImport.update({
+  id: '/campaigns/new',
+  path: '/campaigns/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampaignsCampaignIdIndexRoute =
+  CampaignsCampaignIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => CampaignsCampaignIdRoute,
+  } as any)
+const CampaignsCampaignIdDetailsRoute =
+  CampaignsCampaignIdDetailsRouteImport.update({
+    id: '/details',
+    path: '/details',
+    getParentRoute: () => CampaignsCampaignIdRoute,
+  } as any)
+const CampaignsCampaignIdPersonalizeRoute =
+  CampaignsCampaignIdPersonalizeRouteImport.update({
+    id: '/personalize',
+    path: '/personalize',
+    getParentRoute: () => CampaignsCampaignIdRoute,
+  } as any)
+const CampaignsCampaignIdQuoteRoute =
+  CampaignsCampaignIdQuoteRouteImport.update({
+    id: '/quote',
+    path: '/quote',
+    getParentRoute: () => CampaignsCampaignIdRoute,
+  } as any)
+const CampaignsCampaignIdRecipientsRoute =
+  CampaignsCampaignIdRecipientsRouteImport.update({
+    id: '/recipients',
+    path: '/recipients',
+    getParentRoute: () => CampaignsCampaignIdRoute,
+  } as any)
+const CampaignsCampaignIdTemplateRoute =
+  CampaignsCampaignIdTemplateRouteImport.update({
+    id: '/template',
+    path: '/template',
+    getParentRoute: () => CampaignsCampaignIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/quote-review': typeof QuoteReviewRoute
   '/recipients': typeof RecipientsRoute
   '/templates': typeof TemplatesRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteWithChildren
+  '/campaigns/new': typeof CampaignsNewRoute
+  '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
+  '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
+  '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
+  '/campaigns/$campaignId/recipients': typeof CampaignsCampaignIdRecipientsRoute
+  '/campaigns/$campaignId/template': typeof CampaignsCampaignIdTemplateRoute
+  '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/quote-review': typeof QuoteReviewRoute
   '/recipients': typeof RecipientsRoute
   '/templates': typeof TemplatesRoute
+  '/campaigns/new': typeof CampaignsNewRoute
+  '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
+  '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
+  '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
+  '/campaigns/$campaignId/recipients': typeof CampaignsCampaignIdRecipientsRoute
+  '/campaigns/$campaignId/template': typeof CampaignsCampaignIdTemplateRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +122,57 @@ export interface FileRoutesById {
   '/quote-review': typeof QuoteReviewRoute
   '/recipients': typeof RecipientsRoute
   '/templates': typeof TemplatesRoute
+  '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteWithChildren
+  '/campaigns/new': typeof CampaignsNewRoute
+  '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
+  '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
+  '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
+  '/campaigns/$campaignId/recipients': typeof CampaignsCampaignIdRecipientsRoute
+  '/campaigns/$campaignId/template': typeof CampaignsCampaignIdTemplateRoute
+  '/campaigns/$campaignId/': typeof CampaignsCampaignIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/quote-review' | '/recipients' | '/templates'
+  fullPaths:
+    | '/'
+    | '/quote-review'
+    | '/recipients'
+    | '/templates'
+    | '/campaigns/$campaignId'
+    | '/campaigns/new'
+    | '/campaigns/$campaignId/details'
+    | '/campaigns/$campaignId/personalize'
+    | '/campaigns/$campaignId/quote'
+    | '/campaigns/$campaignId/recipients'
+    | '/campaigns/$campaignId/template'
+    | '/campaigns/$campaignId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/quote-review' | '/recipients' | '/templates'
-  id: '__root__' | '/' | '/quote-review' | '/recipients' | '/templates'
+  to:
+    | '/'
+    | '/quote-review'
+    | '/recipients'
+    | '/templates'
+    | '/campaigns/new'
+    | '/campaigns/$campaignId/details'
+    | '/campaigns/$campaignId/personalize'
+    | '/campaigns/$campaignId/quote'
+    | '/campaigns/$campaignId/recipients'
+    | '/campaigns/$campaignId/template'
+    | '/campaigns/$campaignId'
+  id:
+    | '__root__'
+    | '/'
+    | '/quote-review'
+    | '/recipients'
+    | '/templates'
+    | '/campaigns/$campaignId'
+    | '/campaigns/new'
+    | '/campaigns/$campaignId/details'
+    | '/campaigns/$campaignId/personalize'
+    | '/campaigns/$campaignId/quote'
+    | '/campaigns/$campaignId/recipients'
+    | '/campaigns/$campaignId/template'
+    | '/campaigns/$campaignId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +180,8 @@ export interface RootRouteChildren {
   QuoteReviewRoute: typeof QuoteReviewRoute
   RecipientsRoute: typeof RecipientsRoute
   TemplatesRoute: typeof TemplatesRoute
+  CampaignsCampaignIdRoute: typeof CampaignsCampaignIdRouteWithChildren
+  CampaignsNewRoute: typeof CampaignsNewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,14 +214,93 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TemplatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campaigns/$campaignId': {
+      id: '/campaigns/$campaignId'
+      path: '/campaigns/$campaignId'
+      fullPath: '/campaigns/$campaignId'
+      preLoaderRoute: typeof CampaignsCampaignIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campaigns/new': {
+      id: '/campaigns/new'
+      path: '/campaigns/new'
+      fullPath: '/campaigns/new'
+      preLoaderRoute: typeof CampaignsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campaigns/$campaignId/': {
+      id: '/campaigns/$campaignId/'
+      path: '/'
+      fullPath: '/campaigns/$campaignId/'
+      preLoaderRoute: typeof CampaignsCampaignIdIndexRouteImport
+      parentRoute: typeof CampaignsCampaignIdRoute
+    }
+    '/campaigns/$campaignId/details': {
+      id: '/campaigns/$campaignId/details'
+      path: '/details'
+      fullPath: '/campaigns/$campaignId/details'
+      preLoaderRoute: typeof CampaignsCampaignIdDetailsRouteImport
+      parentRoute: typeof CampaignsCampaignIdRoute
+    }
+    '/campaigns/$campaignId/personalize': {
+      id: '/campaigns/$campaignId/personalize'
+      path: '/personalize'
+      fullPath: '/campaigns/$campaignId/personalize'
+      preLoaderRoute: typeof CampaignsCampaignIdPersonalizeRouteImport
+      parentRoute: typeof CampaignsCampaignIdRoute
+    }
+    '/campaigns/$campaignId/quote': {
+      id: '/campaigns/$campaignId/quote'
+      path: '/quote'
+      fullPath: '/campaigns/$campaignId/quote'
+      preLoaderRoute: typeof CampaignsCampaignIdQuoteRouteImport
+      parentRoute: typeof CampaignsCampaignIdRoute
+    }
+    '/campaigns/$campaignId/recipients': {
+      id: '/campaigns/$campaignId/recipients'
+      path: '/recipients'
+      fullPath: '/campaigns/$campaignId/recipients'
+      preLoaderRoute: typeof CampaignsCampaignIdRecipientsRouteImport
+      parentRoute: typeof CampaignsCampaignIdRoute
+    }
+    '/campaigns/$campaignId/template': {
+      id: '/campaigns/$campaignId/template'
+      path: '/template'
+      fullPath: '/campaigns/$campaignId/template'
+      preLoaderRoute: typeof CampaignsCampaignIdTemplateRouteImport
+      parentRoute: typeof CampaignsCampaignIdRoute
+    }
   }
 }
+
+interface CampaignsCampaignIdRouteChildren {
+  CampaignsCampaignIdDetailsRoute: typeof CampaignsCampaignIdDetailsRoute
+  CampaignsCampaignIdPersonalizeRoute: typeof CampaignsCampaignIdPersonalizeRoute
+  CampaignsCampaignIdQuoteRoute: typeof CampaignsCampaignIdQuoteRoute
+  CampaignsCampaignIdRecipientsRoute: typeof CampaignsCampaignIdRecipientsRoute
+  CampaignsCampaignIdTemplateRoute: typeof CampaignsCampaignIdTemplateRoute
+  CampaignsCampaignIdIndexRoute: typeof CampaignsCampaignIdIndexRoute
+}
+
+const CampaignsCampaignIdRouteChildren: CampaignsCampaignIdRouteChildren = {
+  CampaignsCampaignIdDetailsRoute: CampaignsCampaignIdDetailsRoute,
+  CampaignsCampaignIdPersonalizeRoute: CampaignsCampaignIdPersonalizeRoute,
+  CampaignsCampaignIdQuoteRoute: CampaignsCampaignIdQuoteRoute,
+  CampaignsCampaignIdRecipientsRoute: CampaignsCampaignIdRecipientsRoute,
+  CampaignsCampaignIdTemplateRoute: CampaignsCampaignIdTemplateRoute,
+  CampaignsCampaignIdIndexRoute: CampaignsCampaignIdIndexRoute,
+}
+
+const CampaignsCampaignIdRouteWithChildren =
+  CampaignsCampaignIdRoute._addFileChildren(CampaignsCampaignIdRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   QuoteReviewRoute: QuoteReviewRoute,
   RecipientsRoute: RecipientsRoute,
   TemplatesRoute: TemplatesRoute,
+  CampaignsCampaignIdRoute: CampaignsCampaignIdRouteWithChildren,
+  CampaignsNewRoute: CampaignsNewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

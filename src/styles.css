@@ -66,6 +66,12 @@
   --color-workspace-foreground: var(--workspace-foreground);
   --color-status: var(--status);
   --color-overlay: var(--overlay);
+  --color-tone-draft: var(--tone-draft);
+  --color-tone-submitted: var(--tone-submitted);
+  --color-tone-review: var(--tone-review);
+  --color-tone-approved: var(--tone-approved);
+  --color-tone-changes: var(--tone-changes);
+  --color-paper: var(--paper);
 }
 
 :root {
@@ -107,6 +113,12 @@
   --workspace-foreground: oklch(0.955 0.017 82);
   --status: oklch(0.58 0.105 142);
   --overlay: oklch(0.18 0.015 60 / 45%);
+  --tone-draft: oklch(0.52 0.02 65);
+  --tone-submitted: oklch(0.48 0.05 245);
+  --tone-review: oklch(0.56 0.1 70);
+  --tone-approved: oklch(0.5 0.09 145);
+  --tone-changes: oklch(0.53 0.13 35);
+  --paper: oklch(0.99 0.006 85);
 }
 
 .dark {

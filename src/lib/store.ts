@@ -17,6 +17,7 @@ import {
   newToken,
 } from "@/lib/domain";
 import { estimateCost } from "@/lib/pricing";
+import { seedCampaigns, seedRecipients } from "@/lib/seed";
 
 export type AppState = {
   companies: Company[];
@@ -45,8 +46,8 @@ export function initialState(): AppState {
       { id: "seeblick", name: "Seeblick Treuhand GmbH", initials: "ST", contactName: "Marco Brunner", contactEmail: "m.brunner@seeblick-treuhand.ch" },
     ],
     activeCompanyId: "alpen-co",
-    campaigns: [],
-    recipients: [],
+    campaigns: seedCampaigns,
+    recipients: seedRecipients,
   };
 }
 
@@ -196,6 +197,12 @@ export const actions = {
     patchCampaign(id, (c) => ({ ...c, status }), { allowLocked: true });
   },
 };
+
+/** Actual recipients once added, otherwise the estimate from the brief. */
+export function recipientCount(s: AppState, campaign: Campaign) {
+  const actual = s.recipients.filter((r) => r.campaignId === campaign.id).length;
+  return actual > 0 ? actual : campaign.recipientEstimate;
+}
 
 export function campaignRecipients(s: AppState, campaignId: string) {
   return s.recipients.filter((r) => r.campaignId === campaignId);
