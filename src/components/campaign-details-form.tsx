@@ -79,7 +79,7 @@ export function CampaignDetailsForm({
             render={({ field }) => (
               <Select value={field.value} onValueChange={(value) => field.onChange(value as Occasion)} disabled={disabled}>
                 <SelectTrigger id="occasion">
-                  <SelectValue />
+                  <SelectValue>{m.occasion[field.value]}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {OCCASIONS.map((occasion) => (

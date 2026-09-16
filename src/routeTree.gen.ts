@@ -15,6 +15,7 @@ import { Route as RecipientsRouteImport } from './routes/recipients'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as CampaignsCampaignIdRouteImport } from './routes/campaigns/$campaignId'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
+import { Route as ConfirmTokenRouteImport } from './routes/confirm/$token'
 import { Route as CampaignsCampaignIdIndexRouteImport } from './routes/campaigns/$campaignId/index'
 import { Route as CampaignsCampaignIdDetailsRouteImport } from './routes/campaigns/$campaignId/details'
 import { Route as CampaignsCampaignIdPersonalizeRouteImport } from './routes/campaigns/$campaignId/personalize'
@@ -50,6 +51,11 @@ const CampaignsCampaignIdRoute = CampaignsCampaignIdRouteImport.update({
 const CampaignsNewRoute = CampaignsNewRouteImport.update({
   id: '/campaigns/new',
   path: '/campaigns/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfirmTokenRoute = ConfirmTokenRouteImport.update({
+  id: '/confirm/$token',
+  path: '/confirm/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CampaignsCampaignIdIndexRoute =
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/templates': typeof TemplatesRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
+  '/confirm/$token': typeof ConfirmTokenRoute
   '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
   '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
   '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/recipients': typeof RecipientsRoute
   '/templates': typeof TemplatesRoute
   '/campaigns/new': typeof CampaignsNewRoute
+  '/confirm/$token': typeof ConfirmTokenRoute
   '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
   '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
   '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/templates': typeof TemplatesRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
+  '/confirm/$token': typeof ConfirmTokenRoute
   '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
   '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
   '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
+    | '/confirm/$token'
     | '/campaigns/$campaignId/details'
     | '/campaigns/$campaignId/personalize'
     | '/campaigns/$campaignId/quote'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/recipients'
     | '/templates'
     | '/campaigns/new'
+    | '/confirm/$token'
     | '/campaigns/$campaignId/details'
     | '/campaigns/$campaignId/personalize'
     | '/campaigns/$campaignId/quote'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
+    | '/confirm/$token'
     | '/campaigns/$campaignId/details'
     | '/campaigns/$campaignId/personalize'
     | '/campaigns/$campaignId/quote'
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   TemplatesRoute: typeof TemplatesRoute
   CampaignsCampaignIdRoute: typeof CampaignsCampaignIdRouteWithChildren
   CampaignsNewRoute: typeof CampaignsNewRoute
+  ConfirmTokenRoute: typeof ConfirmTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/campaigns/new'
       fullPath: '/campaigns/new'
       preLoaderRoute: typeof CampaignsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confirm/$token': {
+      id: '/confirm/$token'
+      path: '/confirm/$token'
+      fullPath: '/confirm/$token'
+      preLoaderRoute: typeof ConfirmTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/campaigns/$campaignId/': {
@@ -301,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   TemplatesRoute: TemplatesRoute,
   CampaignsCampaignIdRoute: CampaignsCampaignIdRouteWithChildren,
   CampaignsNewRoute: CampaignsNewRoute,
+  ConfirmTokenRoute: ConfirmTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

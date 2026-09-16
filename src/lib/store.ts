@@ -165,6 +165,36 @@ export const actions = {
     }));
   },
 
+  /**
+   * Recipient-facing confirmation. A personal token updates that recipient;
+   * the campaign share token matches by email or adds a new recipient.
+   */
+  confirmAddress(
+    token: string,
+    input: Pick<Recipient, "firstName" | "lastName" | "email" | "address" | "preferences">,
+  ): { ok: true; recipientId: string } | { ok: false; reason: "not_found" | "closed" } {
+    const confirmedAt = now();
+    const personal = state.recipients.find((r) => r.token === token);
+    if (personal) {
+      actions.updateRecipient(personal.id, { ...input, status: "confirmed", confirmedAt });
+      return { ok: true, recipientId: personal.id };
+    }
+    const campaign = state.campaigns.find((c) => c.shareToken === token);
+    if (!campaign) return { ok: false, reason: "not_found" };
+    const existing = state.recipients.find(
+      (r) => r.campaignId === campaign.id && r.email.toLowerCase() === input.email.trim().toLowerCase(),
+    );
+    if (existing) {
+      actions.updateRecipient(existing.id, { ...input, status: "confirmed", confirmedAt });
+      return { ok: true, recipientId: existing.id };
+    }
+    if (isLocked(campaign)) return { ok: false, reason: "closed" };
+    const [created] = actions.addRecipients(campaign.id, [{ ...input, company: "", status: "confirmed" }]);
+    if (!created) return { ok: false, reason: "closed" };
+    actions.updateRecipient(created.id, { confirmedAt });
+    return { ok: true, recipientId: created.id };
+  },
+
   /** Locks the configuration and freezes a snapshot. Returns false when not submittable. */
   submitQuote(id: string): boolean {
     const campaign = state.campaigns.find((c) => c.id === id);
