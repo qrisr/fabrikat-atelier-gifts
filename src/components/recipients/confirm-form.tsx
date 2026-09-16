@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { findTemplate } from "@/lib/catalog";
 import type { Campaign, Company, Recipient } from "@/lib/domain";
 import { useI18n } from "@/lib/i18n";
+import { useHydrated } from "@/lib/use-hydrated";
 
 export type ConfirmPayload = Pick<Recipient, "firstName" | "lastName" | "email" | "address" | "preferences">;
 
@@ -46,6 +47,7 @@ export function ConfirmForm({
   const [state, setState] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const companyName = company?.name ?? "";
+  const hydrated = useHydrated();
 
   if (state === "done") {
     return (
@@ -63,6 +65,7 @@ export function ConfirmForm({
 
   return (
     <form
+      method="post"
       noValidate
       onSubmit={async (event) => {
         event.preventDefault();
@@ -155,7 +158,7 @@ export function ConfirmForm({
         </p>
       )}
 
-      <Button type="submit" size="lg" className="mt-8 w-full" disabled={preview || state === "saving"}>
+      <Button type="submit" size="lg" className="mt-8 w-full" disabled={preview || !hydrated || state === "saving"}>
         {m.confirm.submit}
       </Button>
       <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-muted-foreground">

@@ -12,6 +12,7 @@ import { OCCASIONS, type Occasion } from "@/lib/domain";
 import { useI18n } from "@/lib/i18n";
 import type { Messages } from "@/lib/messages/en";
 import type { CampaignDetails } from "@/lib/store";
+import { useHydrated } from "@/lib/use-hydrated";
 
 const MIN_LEAD_DAYS = 14;
 
@@ -59,6 +60,7 @@ export function CampaignDetailsForm({
   footer?: ReactNode;
 }) {
   const { m } = useI18n();
+  const hydrated = useHydrated();
   const form = useForm<FormValues>({
     resolver: zodResolver(detailsSchema(m, { enforceLeadTime })),
     defaultValues,
@@ -66,7 +68,7 @@ export function CampaignDetailsForm({
   const { errors } = form.formState;
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8" noValidate>
+    <form onSubmit={form.handleSubmit(onSubmit)} method="post" className="grid gap-8" noValidate>
       <fieldset disabled={disabled} className="grid gap-8 disabled:opacity-70">
         <Field id="name" label={m.details.name} hint={m.details.nameHint} error={errors.name?.message}>
           <Input id="name" placeholder={m.details.namePlaceholder} {...form.register("name")} />
@@ -132,7 +134,7 @@ export function CampaignDetailsForm({
 
       <div className="flex flex-wrap items-center gap-4 border-t border-border pt-8">
         {!disabled && (
-          <Button type="submit" size="lg">
+          <Button type="submit" size="lg" disabled={!hydrated}>
             {submitLabel}
           </Button>
         )}
