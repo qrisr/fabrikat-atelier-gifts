@@ -7,6 +7,8 @@ import type { Personalization } from "@/lib/domain";
 
 /** Estimated parcel cost per recipient within Switzerland (Post Priority). */
 export const SHIPPING_PER_RECIPIENT_CH = 9.5;
+/** Swiss standard VAT rate. */
+export const VAT_RATE = 0.081;
 /** One-time setup for printing a company logo on cards. */
 export const LOGO_SETUP_FEE = 60;
 

@@ -151,6 +151,9 @@ export const actions = {
   },
 
   removeRecipient(recipientId: string) {
+    const recipient = state.recipients.find((r) => r.id === recipientId);
+    const campaign = state.campaigns.find((c) => c.id === recipient?.campaignId);
+    if (!campaign || isLocked(campaign)) return;
     update((s) => ({ ...s, recipients: s.recipients.filter((r) => r.id !== recipientId) }));
   },
 
