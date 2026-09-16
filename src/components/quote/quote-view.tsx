@@ -23,6 +23,7 @@ import { findCard, findSticker, findTemplate, findWrapping } from "@/lib/catalog
 import { type Campaign, type Recipient, isLocked } from "@/lib/domain";
 import { useI18n } from "@/lib/i18n";
 import { VAT_RATE, estimateCost } from "@/lib/pricing";
+import { afterQuoteSubmitted, afterStatusChanged } from "@/lib/integrations-client";
 import { actions, useAppState } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +66,7 @@ export function QuoteView({
     const result = await actions.submitQuote(campaign.id);
     setSubmitting(false);
     if (result.ok) {
+      void afterQuoteSubmitted(campaign.id, m);
       setJustSubmitted(true);
       onSubmitted?.();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -185,8 +187,10 @@ function ReviewControls({ campaign }: { campaign: Campaign }) {
               setBusy(true);
               const ok = await actions.setStatus(campaign.id, status).catch(() => false);
               setBusy(false);
-              if (ok) toast.success(m.review.updated(m.status[status]));
-              else toast.error(m.review.failed);
+              if (ok) {
+                toast.success(m.review.updated(m.status[status]));
+                void afterStatusChanged(campaign.id, status, m);
+              } else toast.error(m.review.failed);
             }}
           >
             {m.review.set(m.status[status])}
@@ -440,7 +444,7 @@ function CostBreakdownPanel({
   recipients: Recipient[];
   children: ReactNode;
 }) {
-  const { m, chf, number } = useI18n();
+  const { m, l, chf, number } = useI18n();
   const count = campaign.snapshot?.recipientCount ?? recipients.length;
   const cost = estimateCost({
     templateId: campaign.snapshot?.templateId ?? campaign.templateId,
@@ -461,12 +465,27 @@ function CostBreakdownPanel({
       </h2>
       <dl className="mt-5 space-y-3 text-sm">
         <Line label={m.quote.lineSets(n, chf(cost.setPrice))} value={chf(cost.setsTotal)} />
-        {cost.personalizationPerRecipient > 0 && (
+        {cost.wrapping + cost.sticker > 0 && (
           <Line
-            label={m.quote.linePersonalization(n, chf(cost.personalizationPerRecipient))}
-            value={chf(cost.personalizationPerRecipient * count)}
+            label={m.quote.linePackaging(n, chf(cost.wrapping + cost.sticker))}
+            value={chf((cost.wrapping + cost.sticker) * count)}
           />
         )}
+        {cost.card > 0 && (
+          <Line label={m.quote.lineCard(n, chf(cost.card))} value={chf(cost.card * count)} />
+        )}
+        {cost.engravings.map((line) => {
+          const item = findTemplate(
+            campaign.snapshot?.templateId ?? campaign.templateId,
+          )?.items.find((i) => i.id === line.itemId);
+          return (
+            <Line
+              key={line.itemId}
+              label={m.quote.lineEngraving(item ? l(item.name) : "", n, chf(line.surcharge))}
+              value={chf(line.surcharge * count)}
+            />
+          );
+        })}
         {cost.logoSetup > 0 && <Line label={m.quote.lineLogo} value={chf(cost.logoSetup)} />}
         <Line
           label={m.quote.lineShipping(n, chf(cost.shippingPerRecipient))}

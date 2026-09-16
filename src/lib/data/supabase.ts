@@ -37,7 +37,7 @@ export function supabaseConfig(): { url: string; key: string } | null {
 const str = (v: unknown) => (typeof v === "string" ? v : v == null ? "" : String(v));
 const num = (v: unknown) => (typeof v === "number" ? v : Number(v ?? 0));
 
-function toCompany(row: Row): Company {
+export function toCompany(row: Row): Company {
   return {
     id: str(row["id"]),
     name: str(row["name"]),
@@ -84,7 +84,11 @@ function toSnapshot(raw: unknown): CampaignSnapshot | null {
   };
 }
 
-function toCampaign(row: Row, personalization: Row | undefined, engravings: Row[]): Campaign {
+export function toCampaign(
+  row: Row,
+  personalization: Row | undefined,
+  engravings: Row[],
+): Campaign {
   return {
     id: str(row["id"]),
     companyId: str(row["company_id"]),
@@ -104,7 +108,7 @@ function toCampaign(row: Row, personalization: Row | undefined, engravings: Row[
   };
 }
 
-function toRecipient(row: Row): Recipient {
+export function toRecipient(row: Row): Recipient {
   return {
     id: str(row["id"]),
     campaignId: str(row["campaign_id"]),
@@ -340,14 +344,24 @@ export function createSupabaseRepository(config: { url: string; key: string }): 
     kind: "supabase",
 
     async load() {
-      await ensureSession();
-      const { data: user } = await client.auth.getUser();
-      const { error } = await client.rpc("ensure_workspace", {
-        _name: DEFAULT_WORKSPACE,
-        _contact_name: "",
-        _contact_email: user.user?.email ?? "",
-      });
-      if (error) throw error;
+      const open = async () => {
+        await ensureSession();
+        const { data: user } = await client.auth.getUser();
+        if (!user.user) throw new Error("session expired");
+        const { error } = await client.rpc("ensure_workspace", {
+          _name: DEFAULT_WORKSPACE,
+          _contact_name: "",
+          _contact_email: user.user.email ?? "",
+        });
+        if (error) throw error;
+      };
+      try {
+        await open();
+      } catch {
+        // Stale or deleted session: start a fresh anonymous session once.
+        await client.auth.signOut({ scope: "local" });
+        await open();
+      }
       baseline = await fetchAll();
       return baseline;
     },
@@ -458,6 +472,11 @@ export function createSupabaseRepository(config: { url: string; key: string }): 
       return {
         result: data === "confirmed" ? "confirmed" : data === "closed" ? "closed" : "not_found",
       };
+    },
+
+    async getAccessToken() {
+      const { data } = await client.auth.getSession();
+      return data.session?.access_token ?? null;
     },
 
     async isStaff() {

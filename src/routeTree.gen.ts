@@ -13,9 +13,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuoteReviewRouteImport } from './routes/quote-review'
 import { Route as RecipientsRouteImport } from './routes/recipients'
 import { Route as TemplatesRouteImport } from './routes/templates'
+import { Route as AtelierIndexRouteImport } from './routes/atelier/index'
+import { Route as AtelierEmailsRouteImport } from './routes/atelier/emails'
 import { Route as CampaignsCampaignIdRouteImport } from './routes/campaigns/$campaignId'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns/new'
 import { Route as ConfirmTokenRouteImport } from './routes/confirm/$token'
+import { Route as ApiHooksCampaignStatusRouteImport } from './routes/api/hooks/campaign-status'
 import { Route as CampaignsCampaignIdIndexRouteImport } from './routes/campaigns/$campaignId/index'
 import { Route as CampaignsCampaignIdDetailsRouteImport } from './routes/campaigns/$campaignId/details'
 import { Route as CampaignsCampaignIdPersonalizeRouteImport } from './routes/campaigns/$campaignId/personalize'
@@ -43,6 +46,16 @@ const TemplatesRoute = TemplatesRouteImport.update({
   path: '/templates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AtelierIndexRoute = AtelierIndexRouteImport.update({
+  id: '/atelier/',
+  path: '/atelier/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtelierEmailsRoute = AtelierEmailsRouteImport.update({
+  id: '/atelier/emails',
+  path: '/atelier/emails',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CampaignsCampaignIdRoute = CampaignsCampaignIdRouteImport.update({
   id: '/campaigns/$campaignId',
   path: '/campaigns/$campaignId',
@@ -56,6 +69,11 @@ const CampaignsNewRoute = CampaignsNewRouteImport.update({
 const ConfirmTokenRoute = ConfirmTokenRouteImport.update({
   id: '/confirm/$token',
   path: '/confirm/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHooksCampaignStatusRoute = ApiHooksCampaignStatusRouteImport.update({
+  id: '/api/hooks/campaign-status',
+  path: '/api/hooks/campaign-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CampaignsCampaignIdIndexRoute =
@@ -100,9 +118,12 @@ export interface FileRoutesByFullPath {
   '/quote-review': typeof QuoteReviewRoute
   '/recipients': typeof RecipientsRoute
   '/templates': typeof TemplatesRoute
+  '/atelier/emails': typeof AtelierEmailsRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
   '/confirm/$token': typeof ConfirmTokenRoute
+  '/atelier/': typeof AtelierIndexRoute
+  '/api/hooks/campaign-status': typeof ApiHooksCampaignStatusRoute
   '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
   '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
   '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
@@ -115,8 +136,11 @@ export interface FileRoutesByTo {
   '/quote-review': typeof QuoteReviewRoute
   '/recipients': typeof RecipientsRoute
   '/templates': typeof TemplatesRoute
+  '/atelier/emails': typeof AtelierEmailsRoute
   '/campaigns/new': typeof CampaignsNewRoute
   '/confirm/$token': typeof ConfirmTokenRoute
+  '/atelier': typeof AtelierIndexRoute
+  '/api/hooks/campaign-status': typeof ApiHooksCampaignStatusRoute
   '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
   '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
   '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
@@ -130,9 +154,12 @@ export interface FileRoutesById {
   '/quote-review': typeof QuoteReviewRoute
   '/recipients': typeof RecipientsRoute
   '/templates': typeof TemplatesRoute
+  '/atelier/emails': typeof AtelierEmailsRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRouteWithChildren
   '/campaigns/new': typeof CampaignsNewRoute
   '/confirm/$token': typeof ConfirmTokenRoute
+  '/atelier/': typeof AtelierIndexRoute
+  '/api/hooks/campaign-status': typeof ApiHooksCampaignStatusRoute
   '/campaigns/$campaignId/details': typeof CampaignsCampaignIdDetailsRoute
   '/campaigns/$campaignId/personalize': typeof CampaignsCampaignIdPersonalizeRoute
   '/campaigns/$campaignId/quote': typeof CampaignsCampaignIdQuoteRoute
@@ -147,9 +174,12 @@ export interface FileRouteTypes {
     | '/quote-review'
     | '/recipients'
     | '/templates'
+    | '/atelier/emails'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/confirm/$token'
+    | '/atelier/'
+    | '/api/hooks/campaign-status'
     | '/campaigns/$campaignId/details'
     | '/campaigns/$campaignId/personalize'
     | '/campaigns/$campaignId/quote'
@@ -162,8 +192,11 @@ export interface FileRouteTypes {
     | '/quote-review'
     | '/recipients'
     | '/templates'
+    | '/atelier/emails'
     | '/campaigns/new'
     | '/confirm/$token'
+    | '/atelier'
+    | '/api/hooks/campaign-status'
     | '/campaigns/$campaignId/details'
     | '/campaigns/$campaignId/personalize'
     | '/campaigns/$campaignId/quote'
@@ -176,9 +209,12 @@ export interface FileRouteTypes {
     | '/quote-review'
     | '/recipients'
     | '/templates'
+    | '/atelier/emails'
     | '/campaigns/$campaignId'
     | '/campaigns/new'
     | '/confirm/$token'
+    | '/atelier/'
+    | '/api/hooks/campaign-status'
     | '/campaigns/$campaignId/details'
     | '/campaigns/$campaignId/personalize'
     | '/campaigns/$campaignId/quote'
@@ -192,9 +228,12 @@ export interface RootRouteChildren {
   QuoteReviewRoute: typeof QuoteReviewRoute
   RecipientsRoute: typeof RecipientsRoute
   TemplatesRoute: typeof TemplatesRoute
+  AtelierEmailsRoute: typeof AtelierEmailsRoute
   CampaignsCampaignIdRoute: typeof CampaignsCampaignIdRouteWithChildren
   CampaignsNewRoute: typeof CampaignsNewRoute
   ConfirmTokenRoute: typeof ConfirmTokenRoute
+  AtelierIndexRoute: typeof AtelierIndexRoute
+  ApiHooksCampaignStatusRoute: typeof ApiHooksCampaignStatusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -227,6 +266,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TemplatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/atelier/': {
+      id: '/atelier/'
+      path: '/atelier'
+      fullPath: '/atelier/'
+      preLoaderRoute: typeof AtelierIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atelier/emails': {
+      id: '/atelier/emails'
+      path: '/atelier/emails'
+      fullPath: '/atelier/emails'
+      preLoaderRoute: typeof AtelierEmailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/campaigns/$campaignId': {
       id: '/campaigns/$campaignId'
       path: '/campaigns/$campaignId'
@@ -246,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/confirm/$token'
       fullPath: '/confirm/$token'
       preLoaderRoute: typeof ConfirmTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hooks/campaign-status': {
+      id: '/api/hooks/campaign-status'
+      path: '/api/hooks/campaign-status'
+      fullPath: '/api/hooks/campaign-status'
+      preLoaderRoute: typeof ApiHooksCampaignStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/campaigns/$campaignId/': {
@@ -319,9 +379,12 @@ const rootRouteChildren: RootRouteChildren = {
   QuoteReviewRoute: QuoteReviewRoute,
   RecipientsRoute: RecipientsRoute,
   TemplatesRoute: TemplatesRoute,
+  AtelierEmailsRoute: AtelierEmailsRoute,
   CampaignsCampaignIdRoute: CampaignsCampaignIdRouteWithChildren,
   CampaignsNewRoute: CampaignsNewRoute,
   ConfirmTokenRoute: ConfirmTokenRoute,
+  AtelierIndexRoute: AtelierIndexRoute,
+  ApiHooksCampaignStatusRoute: ApiHooksCampaignStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

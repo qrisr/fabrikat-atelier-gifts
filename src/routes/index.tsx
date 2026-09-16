@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { EmptyState, PageContainer, PageIntro } from "@/components/empty-state";
 import { ProductArt } from "@/components/product-art";
+import { CopyButton, useConfirmUrl } from "@/components/recipients/recipients-manager";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { nextStep } from "@/lib/campaign-flow";
@@ -96,8 +97,11 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
   const { m, l, chf, date, number } = useI18n();
   const state = useAppState();
   const template = findTemplate(campaign.templateId);
-  const actual = state.recipients.filter((r) => r.campaignId === campaign.id).length;
+  const own = state.recipients.filter((r) => r.campaignId === campaign.id);
+  const actual = own.length;
+  const confirmed = own.filter((r) => r.status === "confirmed").length;
   const count = recipientCount(state, campaign);
+  const confirmUrl = useConfirmUrl();
   const next = nextStep(campaign, actual);
 
   return (
@@ -131,6 +135,26 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
             value={chf(campaign.budgetPerRecipient, { decimals: false })}
           />
         </dl>
+        <div className="mt-5 flex items-center gap-3" data-testid="address-progress">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-baseline justify-between gap-2 text-xs text-muted-foreground">
+              <span className="truncate">
+                {actual > 0 ? m.dashboard.addresses(confirmed, actual) : m.dashboard.noAddressesYet}
+              </span>
+            </div>
+            <div className="mt-2 h-1 overflow-hidden rounded-full bg-secondary">
+              <div
+                className="h-full rounded-full bg-tone-approved transition-[width] duration-500"
+                style={{ width: `${actual ? (confirmed / actual) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
+          <CopyButton
+            value={confirmUrl(campaign.shareToken)}
+            label={m.dashboard.copyLink}
+            iconOnly
+          />
+        </div>
         <Link
           to={`/campaigns/$campaignId/${next.step}`}
           params={{ campaignId: campaign.id }}

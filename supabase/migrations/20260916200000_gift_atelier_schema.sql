@@ -186,8 +186,8 @@ begin
     end if;
   end if;
   if new.status is distinct from old.status then
-    insert into public.campaign_status_events (campaign_id, from_status, to_status)
-    values (new.id, old.status, new.status);
+    insert into public.campaign_status_events (campaign_id, from_status, to_status, note)
+    values (new.id, old.status, new.status, nullif(current_setting('app.status_note', true), ''));
   end if;
   return new;
 end $$;
@@ -359,12 +359,11 @@ begin
     raise exception 'invalid status' using errcode = '22023';
   end if;
   perform set_config('app.status_change', 'on', true);
+  perform set_config('app.status_note', coalesce(_note, ''), true);
   update public.campaigns set status = _status where id = _campaign_id returning * into _c;
   perform set_config('app.status_change', 'off', true);
-  if _note is not null then
-    update public.campaign_status_events set note = _note
-    where id = (select max(id) from public.campaign_status_events where campaign_id = _campaign_id);
-  end if;
+  perform set_config('app.status_note', '', true);
+  if _c.id is null then raise exception 'campaign not found' using errcode = '22023'; end if;
   return _c;
 end $$;
 

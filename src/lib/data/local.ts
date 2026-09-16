@@ -95,6 +95,9 @@ export function createLocalRepository(): Repository {
       if (result === "confirmed") write(data);
       return { result, data };
     },
+    async getAccessToken() {
+      return null;
+    },
     async isStaff() {
       return true;
     },

@@ -36,6 +36,9 @@ import { CSV_TEMPLATE, type CsvProblem, importRecipientsCsv } from "@/lib/csv";
 import { type Campaign, type Recipient, type RecipientStatus, isLocked } from "@/lib/domain";
 import { downloadText, readAsText } from "@/lib/files";
 import { useI18n } from "@/lib/i18n";
+import { getRepository } from "@/lib/data";
+import { inviteRecipients } from "@/lib/integrations-client";
+import type { Messages } from "@/lib/messages/en";
 import { actions, useAppState } from "@/lib/store";
 import { isAddressComplete } from "@/lib/swiss";
 import { cn } from "@/lib/utils";
@@ -60,6 +63,7 @@ export function RecipientsManager({
   const company = companies.find((c) => c.id === campaign.companyId);
   const [filter, setFilter] = useState<RecipientStatus | "all">("all");
   const [adding, setAdding] = useState(false);
+  const [sending, setSending] = useState(false);
   const visible = useMemo(
     () => (filter === "all" ? recipients : recipients.filter((r) => r.status === filter)),
     [recipients, filter],
@@ -101,12 +105,17 @@ export function RecipientsManager({
                 variant="outline"
                 size="sm"
                 title={m.recipients.sendLinksHint}
-                onClick={() =>
-                  actions.markLinksSent(
+                disabled={sending}
+                onClick={async () => {
+                  setSending(true);
+                  const invited = await inviteRecipients(
                     campaign.id,
                     toNotify.map((r) => r.id),
-                  )
-                }
+                    m,
+                  );
+                  actions.markLinksSent(campaign.id, invited);
+                  setSending(false);
+                }}
               >
                 <Send className="size-4" /> {m.recipients.sendLinks} ({toNotify.length})
               </Button>
@@ -222,6 +231,16 @@ export function RecipientsManager({
   );
 }
 
+/** Every new recipient gets a personal link to confirm (or complete) their address. */
+async function inviteNew(campaignId: string, created: Recipient[], m: Messages) {
+  const ids = created.filter((r) => r.status !== "confirmed").map((r) => r.id);
+  if (ids.length === 0) return;
+  // Give the repository a moment to persist the new rows before the server reads them.
+  await getRepository().flush();
+  const invited = await inviteRecipients(campaignId, ids, m);
+  actions.markLinksSent(campaignId, invited);
+}
+
 function Panel({
   icon: Icon,
   title,
@@ -272,6 +291,7 @@ function CsvImport({
     );
     const created = parsed.rows.length > 0 ? actions.addRecipients(campaign.id, parsed.rows) : [];
     setResult({ added: created.length, problems: parsed.problems });
+    await inviteNew(campaign.id, created, m);
   }
 
   return (
@@ -388,7 +408,7 @@ export function CsvResultMessage({ added, problems }: { added: number; problems:
   );
 }
 
-function CopyButton({
+export function CopyButton({
   value,
   label,
   iconOnly = false,
@@ -640,7 +660,7 @@ function AddRecipientDialog({
             });
             setErrors(found);
             if (hasErrors(found)) return;
-            actions.addRecipients(campaign.id, [
+            const created = actions.addRecipients(campaign.id, [
               {
                 firstName: draft.firstName.trim(),
                 lastName: draft.lastName.trim(),
@@ -650,6 +670,7 @@ function AddRecipientDialog({
                 preferences: {},
               },
             ]);
+            void inviteNew(campaign.id, created, m);
             onOpenChange(false);
             setDraft(emptyDraft());
           }}

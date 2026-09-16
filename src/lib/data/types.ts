@@ -50,6 +50,8 @@ export interface Repository {
     payload: ConfirmPayload,
     local: PersistedData,
   ): Promise<{ result: ConfirmResult; data?: PersistedData }>;
+  /** Session token for server functions (null in browser mode). */
+  getAccessToken(): Promise<string | null>;
   /** Supabase only: whether the signed-in user is Fabrikat staff. */
   isStaff(): Promise<boolean>;
 }

@@ -4,6 +4,7 @@ import {
   Check,
   ChevronsUpDown,
   FileCheck2,
+  FolderKanban,
   Gift,
   LayoutDashboard,
   Menu,
@@ -35,7 +36,7 @@ export function AppShell() {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const { m } = useI18n();
-  const { ready, loadError } = useAppState();
+  const { ready, loadError, isStaff } = useAppState();
   const standalone = STANDALONE_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
   useEffect(() => {
@@ -53,7 +54,12 @@ export function AppShell() {
     return <Outlet />;
   }
 
-  const navigation = [
+  const navigation: Array<{
+    label: string;
+    to: string;
+    icon: typeof Gift;
+    match: (p: string) => boolean;
+  }> = [
     {
       label: m.nav.campaigns,
       to: "/",
@@ -78,7 +84,15 @@ export function AppShell() {
       icon: FileCheck2,
       match: (p: string) => p.startsWith("/quote-review"),
     },
-  ] as const;
+  ];
+  if (isStaff) {
+    navigation.push({
+      label: m.atelier.nav,
+      to: "/atelier",
+      icon: FolderKanban,
+      match: (p: string) => p.startsWith("/atelier"),
+    });
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
