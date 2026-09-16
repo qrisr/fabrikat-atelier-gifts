@@ -151,9 +151,7 @@ export function RecipientsManager({
         </div>
 
         {recipients.length === 0 ? (
-          <p className="rounded-sm border border-dashed border-border px-6 py-10 text-center text-sm text-muted-foreground">
-            {m.recipients.emptyList}
-          </p>
+          <RecipientsGuide />
         ) : (
           <div className="overflow-hidden rounded-sm border border-border bg-card">
             <div className="hidden grid-cols-[minmax(0,1.1fr)_minmax(0,1.3fr)_8.5rem_7.5rem] gap-4 border-b border-border px-5 py-3 text-[0.6875rem] uppercase tracking-[0.1em] text-muted-foreground md:grid">
@@ -239,6 +237,107 @@ async function inviteNew(campaignId: string, created: Recipient[], m: Messages) 
   await getRepository().flush();
   const invited = await inviteRecipients(campaignId, ids, m);
   actions.markLinksSent(campaignId, invited);
+}
+
+function RecipientsGuide() {
+  const { m } = useI18n();
+  const g = m.recipients.guide;
+  const columns: Array<[string, boolean]> = [
+    ["first_name", true],
+    ["last_name", true],
+    ["email", true],
+    ["company", false],
+    ["street", false],
+    ["postal_code", false],
+    ["city", false],
+    ["canton", false],
+  ];
+  return (
+    <section
+      className="rounded-sm border border-dashed border-border bg-card p-6 sm:p-8"
+      data-testid="recipients-guide"
+    >
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">{g.eyebrow}</p>
+      <h3 className="mt-2 font-display text-2xl">{g.title}</h3>
+      <div className="mt-6 grid gap-8 lg:grid-cols-2">
+        <div>
+          <h4 className="flex items-center gap-2 font-medium">
+            <FileUp className="size-4 text-brand" /> {g.csvTitle}
+          </h4>
+          <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
+            {g.csvSteps.map((step, index) => (
+              <li key={step} className="flex gap-3">
+                <span className="font-display text-foreground">{index + 1}</span> {step}
+              </li>
+            ))}
+          </ol>
+          <p className="mt-5 text-xs uppercase tracking-[0.1em] text-muted-foreground">
+            {g.columnsTitle}
+          </p>
+          <div className="mt-2 overflow-x-auto rounded-sm border border-border">
+            <table className="w-full min-w-[34rem] text-left font-mono text-[0.6875rem]">
+              <thead className="bg-secondary">
+                <tr>
+                  {columns.map(([name, required]) => (
+                    <th key={name} className="px-2 py-1.5 font-medium">
+                      {name}
+                      <span
+                        className={cn(
+                          "block font-sans font-normal",
+                          required ? "text-brand" : "text-muted-foreground",
+                        )}
+                      >
+                        {required ? g.required : g.optional}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="text-muted-foreground">
+                  {[
+                    "Lea",
+                    "Meier",
+                    "lea.meier@beispiel.ch",
+                    "Beispiel AG",
+                    "Seefeldstrasse 12",
+                    "8008",
+                    "Zürich",
+                    "ZH",
+                  ].map((v) => (
+                    <td key={v} className="border-t border-border px-2 py-1.5">
+                      {v}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-4"
+            onClick={() => downloadText("fabrikat-empfaenger-vorlage.csv", `\uFEFF${CSV_TEMPLATE}`)}
+          >
+            <Download className="size-4" /> {m.recipients.csvTemplate}
+          </Button>
+        </div>
+        <div>
+          <h4 className="flex items-center gap-2 font-medium">
+            <Link2 className="size-4 text-brand" /> {g.linkTitle}
+          </h4>
+          <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
+            {g.linkSteps.map((step, index) => (
+              <li key={step} className="flex gap-3">
+                <span className="font-display text-foreground">{index + 1}</span> {step}
+              </li>
+            ))}
+          </ol>
+          <p className="mt-5 text-xs text-muted-foreground">{g.privacy}</p>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function Panel({

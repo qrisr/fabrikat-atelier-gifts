@@ -3,6 +3,7 @@ import { ArrowRight, CalendarDays, Plus, Sparkles, Users, Wallet } from "lucide-
 import { useMemo } from "react";
 
 import { EmptyState, PageContainer, PageIntro } from "@/components/empty-state";
+import { WelcomeIllustration } from "@/components/illustrations";
 import { ProductArt } from "@/components/product-art";
 import { CopyButton, useConfirmUrl } from "@/components/recipients/recipients-manager";
 import { StatusBadge } from "@/components/status-badge";
@@ -64,11 +65,21 @@ function Dashboard() {
       {campaigns.length === 0 ? (
         <EmptyState
           icon={Plus}
+          illustration={<WelcomeIllustration className="mb-8" />}
           eyebrow={m.dashboard.emptyEyebrow}
           title={m.dashboard.emptyTitle}
           description={m.dashboard.emptyBody}
           action={{ label: m.dashboard.emptyAction, to: "/campaigns/new" }}
-        />
+        >
+          <ol className="mx-auto mt-10 grid max-w-xl gap-3 text-left text-xs text-muted-foreground sm:grid-cols-4">
+            {m.dashboard.emptySteps.map((step, index) => (
+              <li key={step} className="flex gap-2 sm:flex-col sm:gap-1.5">
+                <span className="font-display text-base text-brand">{index + 1}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </EmptyState>
       ) : (
         <section aria-labelledby="campaigns-heading">
           <div className="mb-6 flex items-baseline justify-between gap-4">

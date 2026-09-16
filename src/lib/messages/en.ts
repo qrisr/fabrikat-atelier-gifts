@@ -126,10 +126,16 @@ export const en = {
       changesRequested: "See requested changes",
     },
     emptyEyebrow: "Your first campaign",
-    emptyTitle: "Begin with a thoughtful brief.",
+    emptyTitle: "Let's make someone's year end a little warmer.",
     emptyBody:
       "Tell us the occasion, the number of people and your budget. We'll suggest curated Fabrikat sets and prepare a tailored quote.",
-    emptyAction: "Create your first campaign",
+    emptyAction: "Start your first year-end campaign",
+    emptySteps: [
+      "Share the occasion and budget",
+      "Choose a curated set",
+      "Add recipients",
+      "Receive your offer",
+    ],
   },
   flow: {
     back: "All campaigns",
@@ -314,6 +320,27 @@ export const en = {
     save: "Save",
     cancel: "Cancel",
     emptyList: "No recipients yet. Upload a list or share the link above.",
+    guide: {
+      eyebrow: "Getting started",
+      title: "Two easy ways to gather addresses",
+      csvTitle: "Upload a list",
+      csvSteps: [
+        "Download our template and open it in Excel or Numbers.",
+        "Add one person per row — first name, last name and email are enough.",
+        "Save as CSV and upload it above. We'll email each person a personal link.",
+      ],
+      columnsTitle: "Columns",
+      required: "required",
+      optional: "optional",
+      example: "Example row",
+      linkTitle: "Share one link",
+      linkSteps: [
+        "Copy the confirmation link above.",
+        "Send it by email or post it on your intranet.",
+        "Everyone enters their own address — you see who has confirmed right here.",
+      ],
+      privacy: "Addresses are used only for this delivery.",
+    },
     locked:
       "The list is locked while Fabrikat reviews your request. Address confirmations still come in.",
     continue: "Continue to quote",
@@ -420,6 +447,15 @@ export const en = {
       personalization: "Reviewing personalisation feasibility",
       offer: "Official offer with pricing and delivery dates",
     },
+    timelineDetail: {
+      received: "Your configuration is saved and locked, so nothing changes while we review.",
+      availability: "We confirm quantities with our makers — usually within one working day.",
+      personalization:
+        "Our atelier checks engravings, card print and logo quality, and tests your wrapping.",
+      offer: "You receive a binding offer by email, usually within two working days.",
+    },
+    reviewHeading: "What happens now",
+    reviewContact: "Questions in the meantime? Simply reply to our confirmation email.",
     statusPanel: {
       submitted: "Your request is in the queue. We'll begin the review shortly.",
       under_review: "Our atelier is reviewing availability and personalisation right now.",

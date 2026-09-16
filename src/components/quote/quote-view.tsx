@@ -257,36 +257,47 @@ function ReviewStatus({
           <Link to="/">{m.quote.backToDashboard}</Link>
         </Button>
       </div>
-      <ol className="space-y-5 border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-        {steps.map((step) => {
-          const active = "active" in step && step.active;
-          return (
-            <li key={step.key} className="flex items-start gap-3">
-              <span
-                className={cn(
-                  "mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border",
-                  step.done && "border-tone-approved bg-tone-approved text-background",
-                  active && "border-tone-review text-tone-review",
-                )}
-              >
-                {step.done ? (
-                  <Check className="size-3.5" />
-                ) : (
-                  <Circle className={cn("size-2", active && "animate-pulse fill-current")} />
-                )}
-              </span>
-              <span
-                className={cn(
-                  "text-sm leading-6",
-                  !step.done && !active && "text-muted-foreground",
-                )}
-              >
-                {m.quote.timeline[step.key]}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
+      <div className="border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          {m.quote.reviewHeading}
+        </p>
+        <ol className="space-y-5">
+          {steps.map((step) => {
+            const active = "active" in step && step.active;
+            return (
+              <li key={step.key} className="flex items-start gap-3">
+                <span
+                  className={cn(
+                    "mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border",
+                    step.done && "border-tone-approved bg-tone-approved text-background",
+                    active && "border-tone-review text-tone-review",
+                  )}
+                >
+                  {step.done ? (
+                    <Check className="size-3.5" />
+                  ) : (
+                    <Circle className={cn("size-2", active && "animate-pulse fill-current")} />
+                  )}
+                </span>
+                <span className="min-w-0">
+                  <span
+                    className={cn(
+                      "block text-sm leading-6",
+                      !step.done && !active && "text-muted-foreground",
+                    )}
+                  >
+                    {m.quote.timeline[step.key]}
+                  </span>
+                  <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
+                    {m.quote.timelineDetail[step.key]}
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+        <p className="mt-6 text-xs text-muted-foreground">{m.quote.reviewContact}</p>
+      </div>
     </section>
   );
 }
