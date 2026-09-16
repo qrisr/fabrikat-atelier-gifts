@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Sparkles } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -41,9 +43,9 @@ function Index() {
           <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-muted-foreground">
             Select a curated gift set, refine the details, and invite Fabrikat to prepare your tailored quote.
           </p>
-          <button className="mt-8 inline-flex h-11 items-center justify-center gap-2 rounded-sm bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+          <Button className="mt-8">
             <Plus className="size-4" /> Create campaign
-          </button>
+          </Button>
         </div>
       </section>
     </div>
