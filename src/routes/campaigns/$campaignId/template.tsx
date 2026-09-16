@@ -24,7 +24,9 @@ function TemplateStep() {
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem]">
       <section>
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">{m.gallery.eyebrow}</p>
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+          {m.gallery.eyebrow}
+        </p>
         <h1 className="font-display text-4xl">{m.gallery.title}</h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">{m.gallery.intro}</p>
         <ul className="mt-10 grid gap-6 xl:grid-cols-2">

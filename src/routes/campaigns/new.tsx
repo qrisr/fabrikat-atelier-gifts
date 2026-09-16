@@ -19,12 +19,17 @@ function NewCampaign() {
   const { template } = Route.useSearch();
   const preselected = findTemplate(template);
   const year = new Date().getFullYear();
-  const suggestedDate = `${year}-12-10` >= earliestDeliveryDate() ? `${year}-12-10` : earliestDeliveryDate();
+  const suggestedDate =
+    `${year}-12-10` >= earliestDeliveryDate() ? `${year}-12-10` : earliestDeliveryDate();
 
   return (
     <PageContainer>
       <div className="mx-auto max-w-2xl">
-        <PageIntro eyebrow={m.details.newEyebrow} title={m.details.newTitle} description={m.details.newIntro} />
+        <PageIntro
+          eyebrow={m.details.newEyebrow}
+          title={m.details.newTitle}
+          description={m.details.newIntro}
+        />
         <CampaignDetailsForm
           submitLabel={m.details.submitNew}
           defaultValues={{

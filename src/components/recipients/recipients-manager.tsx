@@ -1,6 +1,18 @@
 /** Recipient collection: CSV import, share link, list with inline editing, form preview. */
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Copy, Download, FileUp, Link2, Pencil, Plus, Send, Trash2, X } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Copy,
+  Download,
+  FileUp,
+  Link2,
+  Pencil,
+  Plus,
+  Send,
+  Trash2,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { ConfirmForm } from "@/components/recipients/confirm-form";
@@ -13,7 +25,13 @@ import {
   validateDraft,
 } from "@/components/recipients/recipient-fields";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { CSV_TEMPLATE, type CsvProblem, importRecipientsCsv } from "@/lib/csv";
 import { type Campaign, type Recipient, type RecipientStatus, isLocked } from "@/lib/domain";
 import { downloadText, readAsText } from "@/lib/files";
@@ -29,7 +47,13 @@ export function useConfirmUrl() {
   return (token: string) => `${origin}/confirm/${token}`;
 }
 
-export function RecipientsManager({ campaign, recipients }: { campaign: Campaign; recipients: Recipient[] }) {
+export function RecipientsManager({
+  campaign,
+  recipients,
+}: {
+  campaign: Campaign;
+  recipients: Recipient[];
+}) {
   const { m } = useI18n();
   const { companies } = useAppState();
   const locked = isLocked(campaign);
@@ -50,7 +74,11 @@ export function RecipientsManager({ campaign, recipients }: { campaign: Campaign
 
   return (
     <div className="space-y-12">
-      {locked && <p className="rounded-sm border border-border bg-secondary px-4 py-3 text-sm">{m.recipients.locked}</p>}
+      {locked && (
+        <p className="rounded-sm border border-border bg-secondary px-4 py-3 text-sm">
+          {m.recipients.locked}
+        </p>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <CsvImport campaign={campaign} recipients={recipients} disabled={locked} />
@@ -63,7 +91,9 @@ export function RecipientsManager({ campaign, recipients }: { campaign: Campaign
             <h2 id="recipient-list" className="font-display text-2xl">
               {m.recipients.listTitle}
             </h2>
-            <p className="mt-1 text-sm text-muted-foreground">{m.recipients.listCount(recipients.length)}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {m.recipients.listCount(recipients.length)}
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
             {toNotify.length > 0 && (
@@ -71,7 +101,12 @@ export function RecipientsManager({ campaign, recipients }: { campaign: Campaign
                 variant="outline"
                 size="sm"
                 title={m.recipients.sendLinksHint}
-                onClick={() => actions.markLinksSent(campaign.id, toNotify.map((r) => r.id))}
+                onClick={() =>
+                  actions.markLinksSent(
+                    campaign.id,
+                    toNotify.map((r) => r.id),
+                  )
+                }
               >
                 <Send className="size-4" /> {m.recipients.sendLinks} ({toNotify.length})
               </Button>
@@ -93,11 +128,15 @@ export function RecipientsManager({ campaign, recipients }: { campaign: Campaign
               onClick={() => setFilter(key)}
               className={cn(
                 "h-8 rounded-full border px-3 text-xs transition-colors",
-                filter === key ? "border-foreground bg-foreground text-background" : "border-border hover:border-foreground/40",
+                filter === key
+                  ? "border-foreground bg-foreground text-background"
+                  : "border-border hover:border-foreground/40",
               )}
             >
               {key === "all" ? m.recipients.filterAll : m.recipients.statusLabel[key]}{" "}
-              <span className="tabular-nums opacity-70">{key === "all" ? recipients.length : counts[key]}</span>
+              <span className="tabular-nums opacity-70">
+                {key === "all" ? recipients.length : counts[key]}
+              </span>
             </button>
           ))}
         </div>
@@ -128,13 +167,20 @@ export function RecipientsManager({ campaign, recipients }: { campaign: Campaign
         )}
       </section>
 
-      <section aria-labelledby="form-preview" className="grid gap-8 rounded-sm border border-border bg-secondary/50 p-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:p-10">
+      <section
+        aria-labelledby="form-preview"
+        className="grid gap-8 rounded-sm border border-border bg-secondary/50 p-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:p-10"
+      >
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">{m.recipients.openForm}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+            {m.recipients.openForm}
+          </p>
           <h2 id="form-preview" className="mt-3 font-display text-3xl">
             {m.confirm.preview}
           </h2>
-          <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">{m.recipients.linkBody}</p>
+          <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
+            {m.recipients.linkBody}
+          </p>
           <Button asChild variant="outline" className="mt-6">
             <a href={confirmUrl(campaign.shareToken)} target="_blank" rel="noreferrer">
               <Link2 className="size-4" /> {m.recipients.openForm}
@@ -142,7 +188,19 @@ export function RecipientsManager({ campaign, recipients }: { campaign: Campaign
           </Button>
         </div>
         <div className="mx-auto w-full max-w-[24rem] rounded-[1.75rem] border-[6px] border-foreground/85 bg-background p-6 shadow-xl">
-          <ConfirmForm campaign={campaign} company={company} recipient={undefined} preview />
+          <ConfirmForm
+            preview
+            context={{
+              campaign: {
+                id: campaign.id,
+                templateId: campaign.templateId,
+                deliveryDate: campaign.deliveryDate,
+                status: campaign.status,
+                companyName: company?.name ?? "",
+              },
+              recipient: null,
+            }}
+          />
         </div>
       </section>
 
@@ -154,12 +212,27 @@ export function RecipientsManager({ campaign, recipients }: { campaign: Campaign
         </Button>
       </div>
 
-      <AddRecipientDialog open={adding} onOpenChange={setAdding} campaign={campaign} recipients={recipients} />
+      <AddRecipientDialog
+        open={adding}
+        onOpenChange={setAdding}
+        campaign={campaign}
+        recipients={recipients}
+      />
     </div>
   );
 }
 
-function Panel({ icon: Icon, title, body, children }: { icon: typeof FileUp; title: string; body: string; children: ReactNode }) {
+function Panel({
+  icon: Icon,
+  title,
+  body,
+  children,
+}: {
+  icon: typeof FileUp;
+  title: string;
+  body: string;
+  children: ReactNode;
+}) {
   return (
     <section className="flex flex-col rounded-sm border border-border bg-card p-6">
       <div className="flex items-start gap-4">
@@ -176,7 +249,15 @@ function Panel({ icon: Icon, title, body, children }: { icon: typeof FileUp; tit
   );
 }
 
-function CsvImport({ campaign, recipients, disabled }: { campaign: Campaign; recipients: Recipient[]; disabled: boolean }) {
+function CsvImport({
+  campaign,
+  recipients,
+  disabled,
+}: {
+  campaign: Campaign;
+  recipients: Recipient[];
+  disabled: boolean;
+}) {
   const { m } = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -231,7 +312,7 @@ function CsvImport({ campaign, recipients, disabled }: { campaign: Campaign; rec
       </label>
       <button
         type="button"
-        onClick={() => downloadText("fabrikat-empfaenger-vorlage.csv", `﻿${CSV_TEMPLATE}`)}
+        onClick={() => downloadText("fabrikat-empfaenger-vorlage.csv", `\uFEFF${CSV_TEMPLATE}`)}
         className="mt-4 inline-flex items-center gap-2 self-start text-sm text-foreground underline-offset-4 hover:underline"
       >
         <Download className="size-4" /> {m.recipients.csvTemplate}
@@ -265,7 +346,9 @@ export function CsvResultMessage({ added, problems }: { added: number; problems:
         return p.duplicate_email(problem.line, problem.value);
     }
   };
-  const rowProblems = problems.filter((x) => x.kind !== "empty_file" && x.kind !== "missing_headers");
+  const rowProblems = problems.filter(
+    (x) => x.kind !== "empty_file" && x.kind !== "missing_headers",
+  );
   const fatal = problems.find((x) => x.kind === "empty_file" || x.kind === "missing_headers");
 
   return (
@@ -276,14 +359,22 @@ export function CsvResultMessage({ added, problems }: { added: number; problems:
         </p>
       )}
       {fatal && (
-        <p role="alert" className="rounded-sm border border-tone-changes/30 bg-tone-changes/5 px-3 py-2 text-tone-changes">
+        <p
+          role="alert"
+          className="rounded-sm border border-tone-changes/30 bg-tone-changes/5 px-3 py-2 text-tone-changes"
+        >
           {text(fatal)}
         </p>
       )}
       {rowProblems.length > 0 && (
-        <div role="alert" className="rounded-sm border border-tone-review/30 bg-tone-review/5 px-3 py-2">
+        <div
+          role="alert"
+          className="rounded-sm border border-tone-review/30 bg-tone-review/5 px-3 py-2"
+        >
           <p className="font-medium">
-            {m.recipients.csvSkipped(new Set(rowProblems.map((x) => ("line" in x ? x.line : 0))).size)}
+            {m.recipients.csvSkipped(
+              new Set(rowProblems.map((x) => ("line" in x ? x.line : 0))).size,
+            )}
           </p>
           <ul className="mt-1 list-disc space-y-0.5 pl-5 text-muted-foreground">
             {rowProblems.slice(0, 8).map((problem, i) => (
@@ -297,7 +388,15 @@ export function CsvResultMessage({ added, problems }: { added: number; problems:
   );
 }
 
-function CopyButton({ value, label, iconOnly = false }: { value: string; label: string; iconOnly?: boolean }) {
+function CopyButton({
+  value,
+  label,
+  iconOnly = false,
+}: {
+  value: string;
+  label: string;
+  iconOnly?: boolean;
+}) {
   const { m } = useI18n();
   const [copied, setCopied] = useState(false);
   return (
@@ -358,14 +457,28 @@ export function RecipientStatusBadge({ status }: { status: RecipientStatus }) {
     pending: "text-tone-review bg-tone-review/10 border-tone-review/30",
   }[status];
   return (
-    <span className={cn("inline-flex h-6 items-center gap-1.5 rounded-full border px-2.5 text-xs", tone)} data-status={status}>
+    <span
+      className={cn(
+        "inline-flex h-6 items-center gap-1.5 rounded-full border px-2.5 text-xs",
+        tone,
+      )}
+      data-status={status}
+    >
       <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
       {m.recipients.statusLabel[status]}
     </span>
   );
 }
 
-function RecipientRow({ recipient, recipients, canRemove }: { recipient: Recipient; recipients: Recipient[]; canRemove: boolean }) {
+function RecipientRow({
+  recipient,
+  recipients,
+  canRemove,
+}: {
+  recipient: Recipient;
+  recipients: Recipient[];
+  canRemove: boolean;
+}) {
   const { m } = useI18n();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<RecipientDraft>(recipient);
@@ -397,7 +510,13 @@ function RecipientRow({ recipient, recipients, canRemove }: { recipient: Recipie
             setEditing(false);
           }}
         >
-          <RecipientFields idPrefix={`edit-${recipient.id}`} draft={draft} onChange={setDraft} errors={errors} compact />
+          <RecipientFields
+            idPrefix={`edit-${recipient.id}`}
+            draft={draft}
+            onChange={setDraft}
+            errors={errors}
+            compact
+          />
           <div className="mt-5 flex gap-2">
             <Button type="submit" size="sm">
               <Check className="size-4" /> {m.recipients.save}
@@ -448,8 +567,18 @@ function RecipientRow({ recipient, recipients, canRemove }: { recipient: Recipie
         <RecipientStatusBadge status={recipient.status} />
       </div>
       <div className="flex gap-1 md:justify-end">
-        <CopyButton value={confirmUrl(recipient.token)} label={m.recipients.copyPersonal} iconOnly />
-        <Button variant="ghost" size="sm" aria-label={m.recipients.edit} title={m.recipients.edit} onClick={() => setEditing(true)}>
+        <CopyButton
+          value={confirmUrl(recipient.token)}
+          label={m.recipients.copyPersonal}
+          iconOnly
+        />
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label={m.recipients.edit}
+          title={m.recipients.edit}
+          onClick={() => setEditing(true)}
+        >
           <Pencil className="size-4" />
         </Button>
         {canRemove && (
@@ -496,14 +625,19 @@ function AddRecipientDialog({
     >
       <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="font-display text-2xl font-normal">{m.recipients.dialogTitle}</DialogTitle>
+          <DialogTitle className="font-display text-2xl font-normal">
+            {m.recipients.dialogTitle}
+          </DialogTitle>
         </DialogHeader>
         <form
           id="add-recipient"
           noValidate
           onSubmit={(e) => {
             e.preventDefault();
-            const found = validateDraft(draft, m, { requireAddress: false, takenEmails: recipients.map((r) => r.email) });
+            const found = validateDraft(draft, m, {
+              requireAddress: false,
+              takenEmails: recipients.map((r) => r.email),
+            });
             setErrors(found);
             if (hasErrors(found)) return;
             actions.addRecipients(campaign.id, [

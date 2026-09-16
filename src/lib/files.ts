@@ -3,19 +3,27 @@
 export const LOGO_MAX_BYTES = 2 * 1024 * 1024;
 export const LOGO_TYPES = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"] as const;
 
-export type LogoError = { code: "type"; type: string } | { code: "size"; bytes: number } | { code: "empty" };
+export type LogoError =
+  { code: "type"; type: string } | { code: "size"; bytes: number } | { code: "empty" };
 
 export function validateLogo(file: Pick<File, "type" | "size" | "name">): LogoError | null {
   if (file.size === 0) return { code: "empty" };
   const type = file.type || guessType(file.name);
-  if (!(LOGO_TYPES as readonly string[]).includes(type)) return { code: "type", type: type || file.name };
+  if (!(LOGO_TYPES as readonly string[]).includes(type))
+    return { code: "type", type: type || file.name };
   if (file.size > LOGO_MAX_BYTES) return { code: "size", bytes: file.size };
   return null;
 }
 
 function guessType(name: string): string {
   const ext = name.toLowerCase().split(".").pop();
-  return ext === "svg" ? "image/svg+xml" : ext === "jpg" || ext === "jpeg" ? "image/jpeg" : ext ? `image/${ext}` : "";
+  return ext === "svg"
+    ? "image/svg+xml"
+    : ext === "jpg" || ext === "jpeg"
+      ? "image/jpeg"
+      : ext
+        ? `image/${ext}`
+        : "";
 }
 
 export function readAsDataUrl(file: Blob): Promise<string> {

@@ -13,40 +13,53 @@ import {
   type DraftErrors,
 } from "@/components/recipients/recipient-fields";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { findTemplate } from "@/lib/catalog";
-import type { Campaign, Company, Recipient } from "@/lib/domain";
+import type { ConfirmPayload, ConfirmationData } from "@/lib/data/types";
 import { useI18n } from "@/lib/i18n";
 import { useHydrated } from "@/lib/use-hydrated";
 
-export type ConfirmPayload = Pick<Recipient, "firstName" | "lastName" | "email" | "address" | "preferences">;
+export type { ConfirmPayload };
 
 export function ConfirmForm({
-  campaign,
-  company,
-  recipient,
+  context,
   preview = false,
   onSubmit,
 }: {
-  campaign: Campaign;
-  company: Company | undefined;
-  recipient: Recipient | undefined;
+  context: ConfirmationData;
   preview?: boolean;
-  onSubmit?: (payload: ConfirmPayload) => Promise<{ ok: boolean; error?: string }> | { ok: boolean; error?: string };
+  onSubmit?: (
+    payload: ConfirmPayload,
+  ) => Promise<{ ok: boolean; error?: string }> | { ok: boolean; error?: string };
 }) {
   const { m, l, date } = useI18n();
+  const { campaign, recipient } = context;
   const template = findTemplate(campaign.templateId);
   const preferenceItems = (template?.items ?? []).filter((item) => item.preference);
   const [draft, setDraft] = useState<RecipientDraft>(() =>
     recipient
-      ? { firstName: recipient.firstName, lastName: recipient.lastName, email: recipient.email, company: recipient.company, address: recipient.address }
+      ? {
+          firstName: recipient.firstName,
+          lastName: recipient.lastName,
+          email: recipient.email,
+          company: "",
+          address: recipient.address,
+        }
       : emptyDraft(),
   );
-  const [preferences, setPreferences] = useState<Record<string, string>>(recipient?.preferences ?? {});
+  const [preferences, setPreferences] = useState<Record<string, string>>(
+    recipient?.preferences ?? {},
+  );
   const [errors, setErrors] = useState<DraftErrors>({});
   const [state, setState] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const companyName = company?.name ?? "";
+  const companyName = campaign.companyName;
   const hydrated = useHydrated();
 
   if (state === "done") {
@@ -78,7 +91,11 @@ export function ConfirmForm({
           firstName: draft.firstName.trim(),
           lastName: draft.lastName.trim(),
           email: draft.email.trim(),
-          address: { ...draft.address, street: draft.address.street.trim(), city: draft.address.city.trim() },
+          address: {
+            ...draft.address,
+            street: draft.address.street.trim(),
+            city: draft.address.city.trim(),
+          },
           preferences,
         });
         if (result.ok) setState("done");
@@ -92,8 +109,12 @@ export function ConfirmForm({
         <LogoMark className="size-8" />
         <span className="font-display text-sm uppercase tracking-[0.18em]">Fabrikat</span>
       </div>
-      <p className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-brand">{m.confirm.eyebrow}</p>
-      <h1 className="mt-3 font-display text-3xl leading-tight sm:text-4xl">{m.confirm.title(companyName)}</h1>
+      <p className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+        {m.confirm.eyebrow}
+      </p>
+      <h1 className="mt-3 font-display text-3xl leading-tight sm:text-4xl">
+        {m.confirm.title(companyName)}
+      </h1>
       {recipient && <p className="mt-4 text-sm">{m.confirm.personalHello(recipient.firstName)}</p>}
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{m.confirm.intro}</p>
 
@@ -111,7 +132,9 @@ export function ConfirmForm({
           <section className="border-t border-border pt-8">
             <h2 className="font-display text-2xl">
               {m.confirm.preferencesTitle}{" "}
-              <span className="font-sans text-sm text-muted-foreground">({m.confirm.optional})</span>
+              <span className="font-sans text-sm text-muted-foreground">
+                ({m.confirm.optional})
+              </span>
             </h2>
             <div className="mt-5 grid gap-5">
               {preferenceItems.map((item) => {
@@ -132,7 +155,12 @@ export function ConfirmForm({
                     >
                       <SelectTrigger id={fieldId}>
                         <SelectValue>
-                          {l(pref.options.find((o) => o.id === preferences[pref.id])?.label ?? { de: m.confirm.noPreference, en: m.confirm.noPreference })}
+                          {l(
+                            pref.options.find((o) => o.id === preferences[pref.id])?.label ?? {
+                              de: m.confirm.noPreference,
+                              en: m.confirm.noPreference,
+                            },
+                          )}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
@@ -153,12 +181,20 @@ export function ConfirmForm({
       </div>
 
       {state === "error" && submitError && (
-        <p role="alert" className="mt-6 rounded-sm border border-tone-changes/30 bg-tone-changes/5 px-3 py-2 text-sm text-tone-changes">
+        <p
+          role="alert"
+          className="mt-6 rounded-sm border border-tone-changes/30 bg-tone-changes/5 px-3 py-2 text-sm text-tone-changes"
+        >
           {submitError}
         </p>
       )}
 
-      <Button type="submit" size="lg" className="mt-8 w-full" disabled={preview || !hydrated || state === "saving"}>
+      <Button
+        type="submit"
+        size="lg"
+        className="mt-8 w-full"
+        disabled={preview || !hydrated || state === "saving"}
+      >
         {m.confirm.submit}
       </Button>
       <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-muted-foreground">

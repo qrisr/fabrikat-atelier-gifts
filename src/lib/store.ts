@@ -1,10 +1,14 @@
 /**
  * Application state: companies, campaigns, recipients.
- * External store read via useSyncExternalStore. Persistence is attached
- * through a Repository (see src/lib/data) — the store itself stays synchronous.
+ * Synchronous external store (useSyncExternalStore) with optimistic updates;
+ * every change is handed to the active Repository (browser or Supabase), and
+ * remote changes from other tabs, devices or Fabrikat staff flow back in.
  */
 import { useSyncExternalStore } from "react";
 
+import { getRepository } from "@/lib/data";
+import { demoData } from "@/lib/data/local";
+import type { ConfirmPayload, ConfirmResult, PersistedData, SubmitResult } from "@/lib/data/types";
 import {
   type Campaign,
   type CampaignStatus,
@@ -16,14 +20,13 @@ import {
   newId,
   newToken,
 } from "@/lib/domain";
-import { estimateCost } from "@/lib/pricing";
-import { seedCampaigns, seedRecipients } from "@/lib/seed";
 
-export type AppState = {
-  companies: Company[];
-  activeCompanyId: string;
-  campaigns: Campaign[];
-  recipients: Recipient[];
+export type AppState = PersistedData & {
+  /** False until persisted data has been loaded in the browser. */
+  ready: boolean;
+  backend: "local" | "supabase" | null;
+  loadError: string | null;
+  isStaff: boolean;
 };
 
 export type CampaignDetails = Pick<
@@ -31,37 +34,50 @@ export type CampaignDetails = Pick<
   "name" | "occasion" | "recipientEstimate" | "budgetPerRecipient" | "deliveryDate"
 >;
 
-export type RecipientInput = Omit<Recipient, "id" | "campaignId" | "token" | "createdAt" | "confirmedAt" | "status"> &
+export type RecipientInput = Omit<
+  Recipient,
+  "id" | "campaignId" | "token" | "createdAt" | "confirmedAt" | "status"
+> &
   Partial<Pick<Recipient, "status">>;
 
 type Listener = () => void;
 
 const listeners = new Set<Listener>();
-let state: AppState = initialState();
 
 export function initialState(): AppState {
-  return {
-    companies: [
-      { id: "alpen-co", name: "Alpen & Co. AG", initials: "AC", contactName: "Anna Keller", contactEmail: "anna.keller@alpen-co.ch" },
-      { id: "seeblick", name: "Seeblick Treuhand GmbH", initials: "ST", contactName: "Marco Brunner", contactEmail: "m.brunner@seeblick-treuhand.ch" },
-    ],
-    activeCompanyId: "alpen-co",
-    campaigns: seedCampaigns,
-    recipients: seedRecipients,
-  };
+  return { ...demoData(), ready: false, backend: null, loadError: null, isStaff: false };
 }
+
+let state: AppState = initialState();
+const serverSnapshot = initialState();
 
 export function getState(): AppState {
   return state;
 }
 
-export function setState(next: AppState) {
+function emit(next: AppState) {
   state = next;
   listeners.forEach((listener) => listener());
 }
 
-function update(fn: (draft: AppState) => AppState) {
-  setState(fn(state));
+const persisted = (s: AppState): PersistedData => ({
+  companies: s.companies,
+  activeCompanyId: s.activeCompanyId,
+  campaigns: s.campaigns,
+  recipients: s.recipients,
+});
+
+/** Local change: update UI immediately, then persist. */
+function update(fn: (s: AppState) => AppState) {
+  const next = fn(state);
+  if (next === state) return;
+  emit(next);
+  if (next.ready) getRepository().persist(persisted(next));
+}
+
+/** Data that came from storage — never written back. */
+function applyRemote(data: PersistedData, extra: Partial<AppState> = {}) {
+  emit({ ...state, ...data, ...extra });
 }
 
 export function subscribe(listener: Listener) {
@@ -69,29 +85,58 @@ export function subscribe(listener: Listener) {
   return () => listeners.delete(listener);
 }
 
-const serverSnapshot = initialState();
-
 /** Returns the whole state; its identity only changes on updates. Derive with useMemo. */
 export function useAppState(): AppState {
   return useSyncExternalStore(subscribe, getState, () => serverSnapshot);
 }
 
+let started = false;
+
+/** Loads persisted data once in the browser and subscribes to remote changes. */
+export async function startStore() {
+  if (started || typeof window === "undefined") return;
+  started = true;
+  const repository = getRepository();
+  try {
+    const data = await repository.load();
+    applyRemote(data, { ready: true, backend: repository.kind, loadError: null });
+    repository.subscribe((remote) => applyRemote(remote));
+    const isStaff = await repository.isStaff();
+    if (isStaff !== state.isStaff) emit({ ...state, isStaff });
+  } catch (error) {
+    console.error("[fabrikat] could not load data", error);
+    emit({
+      ...state,
+      ready: true,
+      backend: repository.kind,
+      loadError: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
 const now = () => new Date().toISOString();
 
-function patchCampaign(id: string, fn: (c: Campaign) => Campaign, options: { allowLocked?: boolean } = {}) {
-  update((s) => ({
-    ...s,
-    campaigns: s.campaigns.map((c) => {
-      if (c.id !== id) return c;
-      if (isLocked(c) && !options.allowLocked) return c;
-      return { ...fn(c), updatedAt: now() };
-    }),
-  }));
+function patchCampaign(id: string, fn: (c: Campaign) => Campaign) {
+  update((s) => {
+    const current = s.campaigns.find((c) => c.id === id);
+    if (!current || isLocked(current)) return s;
+    return {
+      ...s,
+      campaigns: s.campaigns.map((c) => (c.id === id ? { ...fn(c), updatedAt: now() } : c)),
+    };
+  });
 }
 
 export const actions = {
   setActiveCompany(companyId: string) {
     update((s) => ({ ...s, activeCompanyId: companyId }));
+  },
+
+  updateCompany(companyId: string, patch: Partial<Omit<Company, "id">>) {
+    update((s) => ({
+      ...s,
+      companies: s.companies.map((c) => (c.id === companyId ? { ...c, ...patch } : c)),
+    }));
   },
 
   createCampaign(details: CampaignDetails): string {
@@ -119,7 +164,9 @@ export const actions = {
 
   selectTemplate(id: string, templateId: string) {
     patchCampaign(id, (c) =>
-      c.templateId === templateId ? c : { ...c, templateId, personalization: { ...c.personalization, engravings: {} } },
+      c.templateId === templateId
+        ? c
+        : { ...c, templateId, personalization: { ...c.personalization, engravings: {} } },
     );
   },
 
@@ -143,18 +190,35 @@ export const actions = {
     return created;
   },
 
-  updateRecipient(recipientId: string, patch: Partial<Omit<Recipient, "id" | "campaignId" | "token">>) {
-    update((s) => ({
-      ...s,
-      recipients: s.recipients.map((r) => (r.id === recipientId ? { ...r, ...patch } : r)),
-    }));
+  updateRecipient(
+    recipientId: string,
+    patch: Partial<Omit<Recipient, "id" | "campaignId" | "token">>,
+  ) {
+    update((s) => {
+      const recipient = s.recipients.find((r) => r.id === recipientId);
+      const campaign = s.campaigns.find((c) => c.id === recipient?.campaignId);
+      if (!recipient || !campaign) return s;
+      // While locked, names and emails stay as submitted; addresses may still be corrected.
+      const allowed = isLocked(campaign)
+        ? {
+            address: patch.address ?? recipient.address,
+            preferences: patch.preferences ?? recipient.preferences,
+          }
+        : patch;
+      return {
+        ...s,
+        recipients: s.recipients.map((r) => (r.id === recipientId ? { ...r, ...allowed } : r)),
+      };
+    });
   },
 
   removeRecipient(recipientId: string) {
-    const recipient = state.recipients.find((r) => r.id === recipientId);
-    const campaign = state.campaigns.find((c) => c.id === recipient?.campaignId);
-    if (!campaign || isLocked(campaign)) return;
-    update((s) => ({ ...s, recipients: s.recipients.filter((r) => r.id !== recipientId) }));
+    update((s) => {
+      const recipient = s.recipients.find((r) => r.id === recipientId);
+      const campaign = s.campaigns.find((c) => c.id === recipient?.campaignId);
+      if (!campaign || isLocked(campaign)) return s;
+      return { ...s, recipients: s.recipients.filter((r) => r.id !== recipientId) };
+    });
   },
 
   markLinksSent(campaignId: string, recipientIds: string[]) {
@@ -168,66 +232,33 @@ export const actions = {
     }));
   },
 
-  /**
-   * Recipient-facing confirmation. A personal token updates that recipient;
-   * the campaign share token matches by email or adds a new recipient.
-   */
-  confirmAddress(
-    token: string,
-    input: Pick<Recipient, "firstName" | "lastName" | "email" | "address" | "preferences">,
-  ): { ok: true; recipientId: string } | { ok: false; reason: "not_found" | "closed" } {
-    const confirmedAt = now();
-    const personal = state.recipients.find((r) => r.token === token);
-    if (personal) {
-      actions.updateRecipient(personal.id, { ...input, status: "confirmed", confirmedAt });
-      return { ok: true, recipientId: personal.id };
+  /** Locks the configuration server-side (or locally) and records the snapshot. */
+  async submitQuote(id: string): Promise<SubmitResult> {
+    const result = await getRepository().submitQuote(id, persisted(state));
+    if (result.ok) {
+      applyRemote({
+        ...persisted(state),
+        campaigns: state.campaigns.map((c) => (c.id === id ? result.campaign : c)),
+      });
     }
-    const campaign = state.campaigns.find((c) => c.shareToken === token);
-    if (!campaign) return { ok: false, reason: "not_found" };
-    const existing = state.recipients.find(
-      (r) => r.campaignId === campaign.id && r.email.toLowerCase() === input.email.trim().toLowerCase(),
-    );
-    if (existing) {
-      actions.updateRecipient(existing.id, { ...input, status: "confirmed", confirmedAt });
-      return { ok: true, recipientId: existing.id };
-    }
-    if (isLocked(campaign)) return { ok: false, reason: "closed" };
-    const [created] = actions.addRecipients(campaign.id, [{ ...input, company: "", status: "confirmed" }]);
-    if (!created) return { ok: false, reason: "closed" };
-    actions.updateRecipient(created.id, { confirmedAt });
-    return { ok: true, recipientId: created.id };
+    return result;
   },
 
-  /** Locks the configuration and freezes a snapshot. Returns false when not submittable. */
-  submitQuote(id: string): boolean {
-    const campaign = state.campaigns.find((c) => c.id === id);
-    if (!campaign || isLocked(campaign)) return false;
-    const recipientCount = state.recipients.filter((r) => r.campaignId === id).length;
-    if (recipientCount === 0 || !campaign.templateId) return false;
-    const cost = estimateCost({
-      templateId: campaign.templateId,
-      personalization: campaign.personalization,
-      recipients: recipientCount,
+  /** Fabrikat-side review status (staff, or demo control in browser mode). */
+  async setStatus(id: string, status: CampaignStatus): Promise<boolean> {
+    const updated = await getRepository().setStatus(id, status, persisted(state));
+    if (!updated) return false;
+    applyRemote({
+      ...persisted(state),
+      campaigns: state.campaigns.map((c) => (c.id === id ? updated : c)),
     });
-    patchCampaign(id, (c) => ({
-      ...c,
-      status: "submitted",
-      submittedAt: now(),
-      snapshot: {
-        templateId: c.templateId,
-        personalization: c.personalization,
-        recipientCount,
-        budgetPerRecipient: c.budgetPerRecipient,
-        deliveryDate: c.deliveryDate,
-        totals: { perRecipient: cost.perRecipient, total: cost.total },
-      },
-    }));
     return true;
   },
 
-  /** Fabrikat-side status change (review tooling / demo control). */
-  setStatus(id: string, status: CampaignStatus) {
-    patchCampaign(id, (c) => ({ ...c, status }), { allowLocked: true });
+  async confirmAddress(token: string, payload: ConfirmPayload): Promise<ConfirmResult> {
+    const { result, data } = await getRepository().confirmAddress(token, payload, persisted(state));
+    if (result === "confirmed" && data) applyRemote(data);
+    return result;
   },
 };
 
@@ -235,8 +266,4 @@ export const actions = {
 export function recipientCount(s: AppState, campaign: Campaign) {
   const actual = s.recipients.filter((r) => r.campaignId === campaign.id).length;
   return actual > 0 ? actual : campaign.recipientEstimate;
-}
-
-export function campaignRecipients(s: AppState, campaignId: string) {
-  return s.recipients.filter((r) => r.campaignId === campaignId);
 }

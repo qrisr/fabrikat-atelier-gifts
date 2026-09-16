@@ -14,7 +14,15 @@ type EmptyStateProps = {
   children?: ReactNode;
 };
 
-export function EmptyState({ icon: Icon, eyebrow, title, description, action, illustration, children }: EmptyStateProps) {
+export function EmptyState({
+  icon: Icon,
+  eyebrow,
+  title,
+  description,
+  action,
+  illustration,
+  children,
+}: EmptyStateProps) {
   return (
     <section className="grid min-h-[28rem] place-items-center border-b border-border py-16 text-center">
       <div className="max-w-xl px-5">
@@ -23,9 +31,13 @@ export function EmptyState({ icon: Icon, eyebrow, title, description, action, il
             <Icon className="size-6 text-primary" strokeWidth={1.4} />
           </div>
         )}
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">{eyebrow}</p>
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+          {eyebrow}
+        </p>
         <h2 className="font-display text-3xl text-foreground sm:text-4xl">{title}</h2>
-        <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-muted-foreground">{description}</p>
+        <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-muted-foreground">
+          {description}
+        </p>
         {action &&
           ("to" in action ? (
             <Button asChild size="lg" className="mt-8">
@@ -56,9 +68,13 @@ export function PageIntro({
   return (
     <header className="mb-12 grid gap-6 border-b border-border pb-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
       <div className="min-w-0 max-w-3xl">
-        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-brand">{eyebrow}</p>
+        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+          {eyebrow}
+        </p>
         <h1 className="font-display text-4xl text-foreground sm:text-5xl">{title}</h1>
-        {description && <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{description}</p>}
+        {description && (
+          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{description}</p>
+        )}
       </div>
       {aside && <div className="min-w-0">{aside}</div>}
     </header>
@@ -66,5 +82,9 @@ export function PageIntro({
 }
 
 export function PageContainer({ children }: { children: ReactNode }) {
-  return <div className="mx-auto max-w-[90rem] px-5 py-10 sm:px-10 sm:py-14 xl:px-16 xl:py-16">{children}</div>;
+  return (
+    <div className="mx-auto max-w-[90rem] px-5 py-10 sm:px-10 sm:py-14 xl:px-16 xl:py-16">
+      {children}
+    </div>
+  );
 }

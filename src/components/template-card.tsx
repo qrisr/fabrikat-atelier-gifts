@@ -24,7 +24,9 @@ export function TemplateCard({
     <article
       className={cn(
         "flex h-full flex-col overflow-hidden rounded-sm border bg-card transition-all",
-        selected ? "border-foreground shadow-[0_0_0_1px_var(--foreground)]" : "border-border hover:border-foreground/40",
+        selected
+          ? "border-foreground shadow-[0_0_0_1px_var(--foreground)]"
+          : "border-border hover:border-foreground/40",
       )}
     >
       <div className="relative">
@@ -64,8 +66,12 @@ export function TemplateCard({
         </ul>
         <div className="mt-auto pt-6">
           {budget !== undefined && (
-            <p className={cn("mb-3 text-xs", over > 0 ? "text-tone-changes" : "text-tone-approved")}>
-              {over > 0 ? m.gallery.overBudget(chf(over, { decimals: false })) : m.gallery.withinBudget}
+            <p
+              className={cn("mb-3 text-xs", over > 0 ? "text-tone-changes" : "text-tone-approved")}
+            >
+              {over > 0
+                ? m.gallery.overBudget(chf(over, { decimals: false }))
+                : m.gallery.withinBudget}
             </p>
           )}
           {action}

@@ -1,15 +1,32 @@
 /** Visual previews for personalisation: wrapped parcel, greeting card, engraving. */
-import { findCard, findSticker, findWrapping, type StickerOption, type WrappingOption } from "@/lib/catalog";
+import {
+  findCard,
+  findSticker,
+  findWrapping,
+  type StickerOption,
+  type WrappingOption,
+} from "@/lib/catalog";
 import type { Personalization } from "@/lib/domain";
 import { cn } from "@/lib/utils";
 
-export function ParcelPreview({ personalization, className }: { personalization: Personalization; className?: string }) {
+export function ParcelPreview({
+  personalization,
+  className,
+}: {
+  personalization: Personalization;
+  className?: string;
+}) {
   const wrapping = findWrapping(personalization.wrappingId);
   const sticker = findSticker(personalization.stickerId);
   const id = `wrap-${wrapping.id}`;
 
   return (
-    <svg viewBox="0 0 320 240" className={cn("block h-auto w-full", className)} role="img" aria-label={wrapping.name.en}>
+    <svg
+      viewBox="0 0 320 240"
+      className={cn("block h-auto w-full", className)}
+      role="img"
+      aria-label={wrapping.name.en}
+    >
       <defs>
         <PaperPattern id={id} wrapping={wrapping} />
       </defs>
@@ -26,7 +43,12 @@ export function ParcelPreview({ personalization, className }: { personalization:
       <path d="M52 140h216v12H52z" fill={wrapping.ribbon} />
       <path d="M268 146l30-30v10l-30 30z" fill={wrapping.ribbon} opacity="0.85" />
       <path d="M165 62l-14 30h14l14-30z" fill={wrapping.ribbon} opacity="0.9" />
-      <path d="M157 86c-26-26-52-10-34 2 8 5 22 2 34-2zM157 86c14-30 44-26 32-8-6 7-20 8-32 8z" fill="none" stroke={wrapping.ribbon} strokeWidth="6" />
+      <path
+        d="M157 86c-26-26-52-10-34 2 8 5 22 2 34-2zM157 86c14-30 44-26 32-8-6 7-20 8-32 8z"
+        fill="none"
+        stroke={wrapping.ribbon}
+        strokeWidth="6"
+      />
       {sticker.motif !== "none" && <Sticker sticker={sticker} cx={96} cy={120} />}
     </svg>
   );
@@ -40,27 +62,48 @@ function PaperPattern({ id, wrapping }: { id: string; wrapping: WrappingOption }
         <path d="M0 3h12M0 9h12M3 0v12M9 0v12" stroke="#000" strokeOpacity="0.05" strokeWidth="1" />
       )}
       {wrapping.pattern === "dots" && <circle cx="6" cy="6" r="1.1" fill="#E9E1D2" opacity="0.7" />}
-      {wrapping.pattern === "foil" && <path d="M0 12L12 0" stroke={wrapping.ribbon} strokeOpacity="0.35" strokeWidth="1" />}
+      {wrapping.pattern === "foil" && (
+        <path d="M0 12L12 0" stroke={wrapping.ribbon} strokeOpacity="0.35" strokeWidth="1" />
+      )}
       {wrapping.pattern === "plain" && <path d="M0 6h12" stroke="#000" strokeOpacity="0.025" />}
     </pattern>
   );
 }
 
-export function Sticker({ sticker, cx, cy, r = 20 }: { sticker: StickerOption; cx: number; cy: number; r?: number }) {
+export function Sticker({
+  sticker,
+  cx,
+  cy,
+  r = 20,
+}: {
+  sticker: StickerOption;
+  cx: number;
+  cy: number;
+  r?: number;
+}) {
   const s = r / 20;
   return (
     <g transform={`translate(${cx} ${cy}) scale(${s})`}>
       <circle r="20" fill={sticker.color} />
       <circle r="17" fill="none" stroke="#F6EFE3" strokeWidth="0.8" opacity="0.8" />
       {sticker.motif === "star" && (
-        <path d="M0-10l2.9 6 6.6.9-4.8 4.6 1.2 6.5L0 4.9-5.9 8l1.2-6.5-4.8-4.6 6.6-.9z" fill="#F6EFE3" />
+        <path
+          d="M0-10l2.9 6 6.6.9-4.8 4.6 1.2 6.5L0 4.9-5.9 8l1.2-6.5-4.8-4.6 6.6-.9z"
+          fill="#F6EFE3"
+        />
       )}
       {sticker.motif === "fir" && (
         <path d="M0-11l6 8h-3l5 7h-3l4 6H-9l4-6h-3l5-7h-3zM-1 10h2v3h-2z" fill="#F6EFE3" />
       )}
       {sticker.motif === "peaks" && <path d="M-12 7l7-11 4 6 4-8 9 13z" fill="#F6EFE3" />}
       {sticker.motif === "merci" && (
-        <text y="4" textAnchor="middle" fontFamily="DM Serif Display, serif" fontSize="11" fill="#F6EFE3">
+        <text
+          y="4"
+          textAnchor="middle"
+          fontFamily="DM Serif Display, serif"
+          fontSize="11"
+          fill="#F6EFE3"
+        >
           Merci
         </text>
       )}
@@ -86,14 +129,18 @@ export function CardPreview({
     <div
       className={cn(
         "relative flex aspect-[7/5] flex-col justify-between overflow-hidden p-[7%] text-[#3A2E25] shadow-[0_18px_30px_-22px_rgba(58,46,37,0.6)]",
-        card.id === "deckle" && "[clip-path:polygon(0_1%,3%_0,8%_1%,15%_0,24%_1%,33%_0,45%_1%,58%_0,70%_1%,82%_0,92%_1%,100%_0,99%_12%,100%_30%,99%_52%,100%_75%,99%_92%,100%_100%,90%_99%,76%_100%,60%_99%,46%_100%,30%_99%,16%_100%,5%_99%,0_100%,1%_80%,0_60%,1%_40%,0_20%)]",
+        card.id === "deckle" &&
+          "[clip-path:polygon(0_1%,3%_0,8%_1%,15%_0,24%_1%,33%_0,45%_1%,58%_0,70%_1%,82%_0,92%_1%,100%_0,99%_12%,100%_30%,99%_52%,100%_75%,99%_92%,100%_100%,90%_99%,76%_100%,60%_99%,46%_100%,30%_99%,16%_100%,5%_99%,0_100%,1%_80%,0_60%,1%_40%,0_20%)]",
         className,
       )}
       style={{ backgroundColor: card.stock }}
       data-testid="card-preview"
     >
       {card.id === "letterpress" && (
-        <div className="pointer-events-none absolute inset-[4%] border border-[#3A2E25]/15" aria-hidden="true" />
+        <div
+          className="pointer-events-none absolute inset-[4%] border border-[#3A2E25]/15"
+          aria-hidden="true"
+        />
       )}
       <div className="flex min-h-[18%] items-start justify-between gap-4">
         {personalization.logoDataUrl ? (
@@ -104,7 +151,9 @@ export function CardPreview({
             data-testid="card-logo"
           />
         ) : (
-          <span className="text-[0.625rem] uppercase tracking-[0.2em] text-[#3A2E25]/60">{companyName}</span>
+          <span className="text-[0.625rem] uppercase tracking-[0.2em] text-[#3A2E25]/60">
+            {companyName}
+          </span>
         )}
       </div>
       <p
@@ -123,7 +172,13 @@ export function CardPreview({
   );
 }
 
-export function EngravingPreview({ text, kind }: { text: string; kind: "pen" | "notebook" | "knife" | string }) {
+export function EngravingPreview({
+  text,
+  kind,
+}: {
+  text: string;
+  kind: "pen" | "notebook" | "knife" | string;
+}) {
   const surface = kind === "notebook" ? "#8A5A3C" : kind === "knife" ? "#C9CCCB" : "#B8924F";
   const ink = kind === "knife" ? "#4B4F4E" : kind === "notebook" ? "#D8B98A" : "#5E4722";
   return (
@@ -132,7 +187,10 @@ export function EngravingPreview({ text, kind }: { text: string; kind: "pen" | "
       style={{ backgroundColor: surface }}
       aria-hidden="true"
     >
-      <span className="truncate font-display text-sm tracking-[0.18em]" style={{ color: ink, textShadow: "0 1px 0 rgba(255,255,255,0.25)" }}>
+      <span
+        className="truncate font-display text-sm tracking-[0.18em]"
+        style={{ color: ink, textShadow: "0 1px 0 rgba(255,255,255,0.25)" }}
+      >
         {text || "·"}
       </span>
     </div>

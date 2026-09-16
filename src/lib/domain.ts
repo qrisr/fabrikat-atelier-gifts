@@ -99,7 +99,12 @@ export type Recipient = {
   createdAt: string;
 };
 
-export const emptyAddress = (): SwissAddress => ({ street: "", postalCode: "", city: "", canton: "" });
+export const emptyAddress = (): SwissAddress => ({
+  street: "",
+  postalCode: "",
+  city: "",
+  canton: "",
+});
 
 export const defaultPersonalization = (): Personalization => ({
   wrappingId: "kraft-natural",

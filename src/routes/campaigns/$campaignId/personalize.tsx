@@ -39,7 +39,10 @@ function PersonalizeStep() {
         eyebrow={m.personalize.eyebrow}
         title={m.personalize.title}
         description={m.personalize.needTemplate}
-        action={{ label: m.personalize.needTemplateAction, to: `/campaigns/${campaignId}/template` }}
+        action={{
+          label: m.personalize.needTemplateAction,
+          to: `/campaigns/${campaignId}/template`,
+        }}
       />
     );
   }
@@ -49,12 +52,15 @@ function PersonalizeStep() {
   const company = companies.find((c) => c.id === campaign.companyId);
   const update = (patch: Partial<typeof p>) => actions.updatePersonalization(campaign.id, patch);
   const engravable = template.items.filter((item) => item.engravingSurcharge !== undefined);
-  const priceTag = (amount: number) => (amount > 0 ? m.personalize.surcharge(chf(amount)) : m.personalize.included);
+  const priceTag = (amount: number) =>
+    amount > 0 ? m.personalize.surcharge(chf(amount)) : m.personalize.included;
 
   return (
     <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_26rem]">
       <div className="min-w-0">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">{m.personalize.eyebrow}</p>
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+          {m.personalize.eyebrow}
+        </p>
         <h1 className="font-display text-4xl">{m.personalize.title}</h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">{m.personalize.intro}</p>
 
@@ -147,7 +153,12 @@ function PersonalizeStep() {
             />
           </Section>
 
-          <Section title={m.personalize.engraving} description={engravable.length ? m.personalize.engravingIntro : m.personalize.engravingNone}>
+          <Section
+            title={m.personalize.engraving}
+            description={
+              engravable.length ? m.personalize.engravingIntro : m.personalize.engravingNone
+            }
+          >
             <ul className="space-y-3">
               {engravable.map((item) => {
                 const choice = p.engravings[item.id] ?? { enabled: false, text: "" };
@@ -155,12 +166,21 @@ function PersonalizeStep() {
                 const setChoice = (patch: Partial<typeof choice>) =>
                   update({ engravings: { ...p.engravings, [item.id]: { ...choice, ...patch } } });
                 return (
-                  <li key={item.id} className="rounded-sm border border-border bg-card p-5" data-testid={`engraving-${item.id}`}>
+                  <li
+                    key={item.id}
+                    className="rounded-sm border border-border bg-card p-5"
+                    data-testid={`engraving-${item.id}`}
+                  >
                     <div className="flex items-center justify-between gap-4">
-                      <Label htmlFor={`engrave-${item.id}`} className="flex min-w-0 items-center gap-3 font-normal">
+                      <Label
+                        htmlFor={`engrave-${item.id}`}
+                        className="flex min-w-0 items-center gap-3 font-normal"
+                      >
                         <PenLine className="size-4 shrink-0 text-brand" />
                         <span className="min-w-0">
-                          <span className="block truncate font-medium">{m.personalize.engravingToggle(l(item.name))}</span>
+                          <span className="block truncate font-medium">
+                            {m.personalize.engravingToggle(l(item.name))}
+                          </span>
                           <span className="block text-xs text-muted-foreground">
                             {m.personalize.surcharge(chf(item.engravingSurcharge ?? 0))}
                           </span>
@@ -175,7 +195,9 @@ function PersonalizeStep() {
                     {choice.enabled && (
                       <div className="mt-5 grid gap-4 border-t border-border pt-5 sm:grid-cols-[minmax(0,1fr)_14rem] sm:items-end">
                         <div className="grid gap-2.5">
-                          <Label htmlFor={`engrave-text-${item.id}`}>{m.personalize.engravingLabel}</Label>
+                          <Label htmlFor={`engrave-text-${item.id}`}>
+                            {m.personalize.engravingLabel}
+                          </Label>
                           <Input
                             id={`engrave-text-${item.id}`}
                             value={choice.text}
@@ -183,7 +205,9 @@ function PersonalizeStep() {
                             placeholder={m.personalize.engravingPlaceholder}
                             onChange={(event) => setChoice({ text: event.target.value })}
                           />
-                          <p className="text-xs text-muted-foreground">{m.personalize.engravingHint(max)}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {m.personalize.engravingHint(max)}
+                          </p>
                         </div>
                         <EngravingPreview text={choice.text} kind={item.kind} />
                       </div>
@@ -197,8 +221,13 @@ function PersonalizeStep() {
       </div>
 
       <div className="space-y-6 xl:sticky xl:top-8 xl:self-start">
-        <section className="rounded-sm border border-border bg-card p-6" aria-label={m.personalize.preview}>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">{m.personalize.preview}</p>
+        <section
+          className="rounded-sm border border-border bg-card p-6"
+          aria-label={m.personalize.preview}
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+            {m.personalize.preview}
+          </p>
           <div className="mt-5 overflow-hidden rounded-sm">
             <ParcelPreview personalization={p} />
           </div>
@@ -227,7 +256,15 @@ function PersonalizeStep() {
   );
 }
 
-function Section({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
+function Section({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: ReactNode;
+}) {
   return (
     <section>
       <div className="mb-5 border-b border-border pb-3">
@@ -259,7 +296,9 @@ function Choice({
       aria-pressed={selected}
       className={cn(
         "relative flex h-full flex-col gap-3 rounded-sm border bg-card p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed",
-        selected ? "border-foreground shadow-[0_0_0_1px_var(--foreground)]" : "border-border hover:border-foreground/40",
+        selected
+          ? "border-foreground shadow-[0_0_0_1px_var(--foreground)]"
+          : "border-border hover:border-foreground/40",
       )}
     >
       {children}
@@ -326,7 +365,9 @@ function LogoUpload({
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm">{logoFileName ?? m.personalize.logoHint}</p>
-          {logoFileName && <p className="text-xs text-muted-foreground">{m.personalize.logoHint}</p>}
+          {logoFileName && (
+            <p className="text-xs text-muted-foreground">{m.personalize.logoHint}</p>
+          )}
         </div>
         <input
           ref={inputRef}
@@ -341,18 +382,32 @@ function LogoUpload({
           }}
         />
         <div className="flex gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => inputRef.current?.click()}
+          >
             {logoDataUrl ? m.personalize.logoReplace : m.personalize.logoUpload}
           </Button>
           {logoDataUrl && (
-            <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null, null)} aria-label={m.personalize.logoRemove}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => onChange(null, null)}
+              aria-label={m.personalize.logoRemove}
+            >
               <Trash2 className="size-4" />
             </Button>
           )}
         </div>
       </div>
       {error && (
-        <p role="alert" className="rounded-sm border border-tone-changes/30 bg-tone-changes/5 px-3 py-2 text-sm text-tone-changes">
+        <p
+          role="alert"
+          className="rounded-sm border border-tone-changes/30 bg-tone-changes/5 px-3 py-2 text-sm text-tone-changes"
+        >
           {error}
         </p>
       )}

@@ -3,7 +3,8 @@
 export const en = {
   meta: {
     appName: "Fabrikat Gift Atelier",
-    description: "Premium, personalised year-end gifts for Swiss companies — curated by Fabrikat, Zurich.",
+    description:
+      "Premium, personalised year-end gifts for Swiss companies — curated by Fabrikat, Zurich.",
   },
   brand: {
     wordmark: "Fabrikat",
@@ -24,6 +25,25 @@ export const en = {
     active: "Active workspace",
     switch: "Switch workspace",
     heading: "Your workspaces",
+    settings: "Company details",
+    settingsTitle: "Company details",
+    settingsIntro: "Fabrikat uses these details for your quotes and notifications.",
+    name: "Company name",
+    contactName: "Contact person",
+    contactEmail: "Email for quotes and updates",
+    save: "Save",
+    cancel: "Cancel",
+    saved: "Company details saved.",
+    required: "Please fill in this field.",
+    invalidEmail: "Please enter a valid email address.",
+  },
+  review: {
+    title: "Fabrikat review",
+    intro: "Atelier controls: set the review status for this request.",
+    demoIntro: "Demo mode: simulate Fabrikat's review to see how status updates reach the company.",
+    set: (status: string) => `Set to ${status}`,
+    updated: (status: string) => `Status updated to ${status}.`,
+    failed: "The status could not be changed.",
   },
   notFound: {
     title: "This page could not be found",
@@ -51,7 +71,7 @@ export const en = {
   },
   dashboard: {
     eyebrow: "Campaign dashboard",
-    greeting: (name: string) => `Welcome back, ${name}.`,
+    greeting: (name: string) => (name ? `Welcome back, ${name}.` : "Welcome to your atelier."),
     intro: "Shape your next gesture of appreciation with objects made to last.",
     season: "Year-end 2026",
     newCampaign: "Start a year-end campaign",
@@ -89,7 +109,8 @@ export const en = {
     },
     notFoundTitle: "We couldn't find this campaign",
     notFoundBody: "It may belong to another workspace or has been removed.",
-    locked: "This campaign has been submitted. Its configuration is locked while Fabrikat reviews it.",
+    locked:
+      "This campaign has been submitted. Its configuration is locked while Fabrikat reviews it.",
     continue: "Continue",
     save: "Save changes",
     saved: "Saved",
@@ -149,7 +170,8 @@ export const en = {
     budgetTotal: "Your budget",
     underBudget: (amount: string) => `${amount} below your budget`,
     overBudget: (amount: string) => `${amount} above your budget`,
-    vatNote: "All prices in CHF excluding 8.1% VAT. The binding offer follows after Fabrikat's review.",
+    vatNote:
+      "All prices in CHF excluding 8.1% VAT. The binding offer follows after Fabrikat's review.",
     noTemplate: "Select a gift set to see your estimate.",
     basedOnEstimate: "Based on your estimated number of recipients.",
     basedOnList: "Based on your recipient list.",
@@ -157,7 +179,8 @@ export const en = {
   personalize: {
     eyebrow: "Controlled personalisation",
     title: "Make it yours, quietly.",
-    intro: "Choose from options our atelier has approved for this set, so every parcel stays beautiful.",
+    intro:
+      "Choose from options our atelier has approved for this set, so every parcel stays beautiful.",
     needTemplate: "Choose a gift set first — personalisation options depend on it.",
     needTemplateAction: "Choose a gift set",
     wrapping: "Wrapping paper",
@@ -165,7 +188,8 @@ export const en = {
     card: "Greeting card",
     cardStock: "Card paper",
     message: "Card message",
-    messagePlaceholder: "e.g. Thank you for a remarkable year together. Warm wishes for the holidays.",
+    messagePlaceholder:
+      "e.g. Thank you for a remarkable year together. Warm wishes for the holidays.",
     messageCount: (n: number, max: number) => `${n} / ${max} characters`,
     logo: "Company logo",
     logoHint: "PNG, JPG, SVG or WebP, up to 2 MB. Printed small and in one colour on the card.",
@@ -186,8 +210,10 @@ export const en = {
     previewParcel: "Parcel",
     continue: "Continue to recipients",
     logoErrors: {
-      type: (type: string) => `We can't use this file type (${type}). Please upload a PNG, JPG, SVG or WebP image.`,
-      size: (size: string) => `This image is ${size} — a little too large. Please keep your logo under 2 MB; a web-sized export is perfect.`,
+      type: (type: string) =>
+        `We can't use this file type (${type}). Please upload a PNG, JPG, SVG or WebP image.`,
+      size: (size: string) =>
+        `This image is ${size} — a little too large. Please keep your logo under 2 MB; a web-sized export is perfect.`,
       empty: "This file appears to be empty. Please try exporting the logo again.",
       read: "We couldn't read this file. Please try another export of your logo.",
     },
@@ -195,7 +221,8 @@ export const en = {
   recipients: {
     eyebrow: "People & delivery",
     title: "Who receives a gift?",
-    intro: "Bring in your list or let recipients confirm their own address — no more chasing spreadsheets.",
+    intro:
+      "Bring in your list or let recipients confirm their own address — no more chasing spreadsheets.",
     campaignPicker: "Campaign",
     csvTitle: "Upload a list",
     csvBody: "Export from Excel or your HR tool as CSV. We read German and English column names.",
@@ -210,10 +237,14 @@ export const en = {
         `We couldn't find the column${missing.includes(",") ? "s" : ""} ${missing}. Your file has: ${found || "no header row"}. Please use the template's header row.`,
       empty_row: (line: number) => `Row ${line} is empty — you can delete it.`,
       missing_value: (line: number, column: string) => `Row ${line}: ${column} is missing.`,
-      invalid_email: (line: number, value: string) => `Row ${line}: "${value}" doesn't look like an email address.`,
-      invalid_postal_code: (line: number, value: string) => `Row ${line}: "${value}" isn't a Swiss postal code (4 digits).`,
-      invalid_canton: (line: number, value: string) => `Row ${line}: "${value}" isn't a canton abbreviation (e.g. ZH, BE, VD).`,
-      duplicate_email: (line: number, value: string) => `Row ${line}: ${value} is already on the list.`,
+      invalid_email: (line: number, value: string) =>
+        `Row ${line}: "${value}" doesn't look like an email address.`,
+      invalid_postal_code: (line: number, value: string) =>
+        `Row ${line}: "${value}" isn't a Swiss postal code (4 digits).`,
+      invalid_canton: (line: number, value: string) =>
+        `Row ${line}: "${value}" isn't a canton abbreviation (e.g. ZH, BE, VD).`,
+      duplicate_email: (line: number, value: string) =>
+        `Row ${line}: ${value} is already on the list.`,
     },
     columns: {
       first_name: "first name",
@@ -226,7 +257,8 @@ export const en = {
       canton: "canton",
     },
     linkTitle: "Share a confirmation link",
-    linkBody: "Recipients enter or confirm their shipping address and choose their preferences. Secure and mobile-friendly.",
+    linkBody:
+      "Recipients enter or confirm their shipping address and choose their preferences. Secure and mobile-friendly.",
     copy: "Copy link",
     copied: "Link copied",
     openForm: "Preview recipient form",
@@ -248,7 +280,8 @@ export const en = {
     save: "Save",
     cancel: "Cancel",
     emptyList: "No recipients yet. Upload a list or share the link above.",
-    locked: "The list is locked while Fabrikat reviews your request. Address confirmations still come in.",
+    locked:
+      "The list is locked while Fabrikat reviews your request. Address confirmations still come in.",
     continue: "Continue to quote",
     dialogTitle: "Add a recipient",
     fields: {
@@ -271,7 +304,8 @@ export const en = {
   confirm: {
     eyebrow: "A gift is on its way",
     title: (company: string) => `${company} would like to send you a gift.`,
-    intro: "Please confirm where we should deliver it. Your details are only used for this delivery.",
+    intro:
+      "Please confirm where we should deliver it. Your details are only used for this delivery.",
     personalHello: (name: string) => `Hello ${name},`,
     addressTitle: "Delivery address",
     addressHint: "Deliveries within Switzerland only.",
@@ -280,18 +314,22 @@ export const en = {
     noPreference: "No preference",
     submit: "Confirm my address",
     successTitle: "Thank you — that's all.",
-    successBody: (date: string) => `Your gift will be carefully wrapped in our Zurich atelier and should arrive by ${date}.`,
+    successBody: (date: string) =>
+      `Your gift will be carefully wrapped in our Zurich atelier and should arrive by ${date}.`,
     notFoundTitle: "This link is no longer valid",
     notFoundBody: "Please ask the person who sent it to you for a new link.",
     closedTitle: "This list is closed",
     closedBody: "The sender has already finalised their list. Please contact them directly.",
-    privacy: "Fabrikat processes your address solely to deliver this gift and deletes it after delivery.",
+    privacy:
+      "Fabrikat processes your address solely to deliver this gift and deletes it after delivery.",
     preview: "Preview — this is what recipients see.",
+    submitError: "We couldn't save your address just now. Please check the fields and try again.",
   },
   quote: {
     eyebrow: "Quote request",
     title: "Everything at a glance.",
-    intro: "Please review your campaign. Fabrikat checks availability and personalisation before sending a binding offer.",
+    intro:
+      "Please review your campaign. Fabrikat checks availability and personalisation before sending a binding offer.",
     giftSet: "Gift set",
     presentation: "Presentation",
     wrapping: "Wrapping",
@@ -304,7 +342,8 @@ export const en = {
     engravings: "Engravings",
     noEngravings: "No engravings",
     recipients: "Recipients",
-    recipientsDetail: (confirmed: number, total: number) => `${confirmed} of ${total} addresses confirmed`,
+    recipientsDetail: (confirmed: number, total: number) =>
+      `${confirmed} of ${total} addresses confirmed`,
     delivery: "Target delivery",
     edit: "Edit",
     costTitle: "Estimated costs",
@@ -316,9 +355,12 @@ export const en = {
     vat: "VAT 8.1%",
     totalInclVat: "Total incl. VAT",
     perRecipient: (amount: string) => `${amount} per recipient excl. VAT and shipping`,
-    estimateNote: "This is an estimate. The binding offer may differ slightly after availability and personalisation checks.",
+    estimateNote:
+      "This is an estimate. The binding offer may differ slightly after availability and personalisation checks.",
     submit: "Request official quote",
     submitHint: "Your configuration is locked while Fabrikat reviews it.",
+    submitError:
+      "We couldn't send your request just now. Please check your connection and try again.",
     missingTemplate: "Choose a gift set before requesting a quote.",
     missingTemplateAction: "Choose a gift set",
     noRecipientsTitle: "Who should receive the gifts?",
@@ -327,7 +369,9 @@ export const en = {
     noRecipientsAction: "Add recipients",
     noRecipientsCancel: "Not now",
     pendingAddresses: (n: number) =>
-      n === 1 ? "1 address is still unconfirmed — that's fine, recipients can confirm during the review." : `${n} addresses are still unconfirmed — that's fine, recipients can confirm during the review.`,
+      n === 1
+        ? "1 address is still unconfirmed — that's fine, recipients can confirm during the review."
+        : `${n} addresses are still unconfirmed — that's fine, recipients can confirm during the review.`,
     confirmationEyebrow: "Request received",
     confirmationTitle: "Thank you. Our atelier is on it.",
     confirmationBody: (email: string) =>
@@ -343,18 +387,28 @@ export const en = {
       submitted: "Your request is in the queue. We'll begin the review shortly.",
       under_review: "Our atelier is reviewing availability and personalisation right now.",
       approved: "Your offer is approved. We'll prepare production and delivery as agreed.",
-      changes_requested: "Fabrikat suggests a few changes. Your campaign is editable again — adjust and resubmit.",
+      changes_requested:
+        "Fabrikat suggests a few changes. Your campaign is editable again — adjust and resubmit.",
       draft: "",
     },
     backToDashboard: "Back to campaigns",
     viewRecipients: "View recipients",
     resubmit: "Review and resubmit",
   },
+  app: {
+    loading: "Preparing your atelier…",
+    loadErrorTitle: "We couldn't load your workspace",
+    loadErrorBody:
+      "Please check your connection and reload the page. Your saved campaigns are safe.",
+    reload: "Reload",
+    saveError: "A change could not be saved. We've reloaded the latest saved version.",
+  },
   pages: {
     templates: {
       eyebrow: "Curated collection",
       title: "Gift Templates",
-      description: "Considered objects, assembled in Zurich. Choose a starting point and make it distinctly yours.",
+      description:
+        "Considered objects, assembled in Zurich. Choose a starting point and make it distinctly yours.",
       emptyEyebrow: "Collection arriving soon",
       emptyTitle: "A quieter kind of gifting.",
       emptyBody: "Our atelier is preparing this season's selection of enduring objects.",
@@ -366,16 +420,19 @@ export const en = {
       description: "Every name, address and personal detail — considered and in one place.",
       emptyEyebrow: "No recipients yet",
       emptyTitle: "Begin with the people.",
-      emptyBody: "Recipients belong to a campaign. Start one, then add your list or share a confirmation link.",
+      emptyBody:
+        "Recipients belong to a campaign. Start one, then add your list or share a confirmation link.",
       emptyAction: "Start a campaign",
     },
     quoteReview: {
       eyebrow: "Final consideration",
       title: "Quote Review",
-      description: "A clear view of your chosen gifts, personal details, quantities and atelier services.",
+      description:
+        "A clear view of your chosen gifts, personal details, quantities and atelier services.",
       emptyEyebrow: "Nothing to review",
       emptyTitle: "Your quote begins with a campaign.",
-      emptyBody: "Once your selection is ready, Fabrikat reviews every detail and prepares a considered offer.",
+      emptyBody:
+        "Once your selection is ready, Fabrikat reviews every detail and prepares a considered offer.",
       emptyAction: "Start a campaign",
     },
   },

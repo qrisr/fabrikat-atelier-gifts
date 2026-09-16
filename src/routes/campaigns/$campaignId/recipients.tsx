@@ -16,7 +16,9 @@ function RecipientsStep() {
 
   return (
     <div>
-      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">{m.recipients.eyebrow}</p>
+      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand">
+        {m.recipients.eyebrow}
+      </p>
       <h1 className="font-display text-4xl">{m.recipients.title}</h1>
       <p className="mb-10 mt-4 max-w-2xl text-muted-foreground">{m.recipients.intro}</p>
       <RecipientsManager campaign={campaign} recipients={recipients} />

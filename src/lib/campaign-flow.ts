@@ -14,7 +14,10 @@ export type NextStepKey =
   | "approved"
   | "changesRequested";
 
-export function nextStep(campaign: Campaign, actualRecipients: number): { key: NextStepKey; step: FlowStep } {
+export function nextStep(
+  campaign: Campaign,
+  actualRecipients: number,
+): { key: NextStepKey; step: FlowStep } {
   switch (campaign.status) {
     case "submitted":
       return { key: "awaitingReview", step: "quote" };
@@ -26,7 +29,10 @@ export function nextStep(campaign: Campaign, actualRecipients: number): { key: N
       return { key: "changesRequested", step: "quote" };
     case "draft":
       if (!campaign.templateId) return { key: "chooseTemplate", step: "template" };
-      if (campaign.personalization.cardMessage.trim() === "" && campaign.personalization.stickerId === "none")
+      if (
+        campaign.personalization.cardMessage.trim() === "" &&
+        campaign.personalization.stickerId === "none"
+      )
         return { key: "personalize", step: "personalize" };
       if (actualRecipients === 0) return { key: "addRecipients", step: "recipients" };
       return { key: "requestQuote", step: "quote" };

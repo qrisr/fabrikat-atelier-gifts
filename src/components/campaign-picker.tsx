@@ -1,6 +1,12 @@
 /** Chooses the campaign for the sidebar pages (Recipients, Quote Review). */
 import { StatusBadge } from "@/components/status-badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { Campaign } from "@/lib/domain";
 import { useI18n } from "@/lib/i18n";
 
@@ -16,7 +22,10 @@ export function CampaignPicker({
   const { m } = useI18n();
   return (
     <div className="grid gap-2 md:w-[22rem]">
-      <label htmlFor="campaign-picker" className="text-xs uppercase tracking-[0.1em] text-muted-foreground">
+      <label
+        htmlFor="campaign-picker"
+        className="text-xs uppercase tracking-[0.1em] text-muted-foreground"
+      >
         {m.recipients.campaignPicker}
       </label>
       <Select value={value} onValueChange={onChange}>

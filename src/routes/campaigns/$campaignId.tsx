@@ -38,16 +38,24 @@ function CampaignLayout() {
   return (
     <PageContainer>
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="size-4" /> {m.flow.back}
         </Link>
         <div className="flex items-center gap-3">
-          <span className="hidden max-w-[16rem] truncate text-sm text-muted-foreground sm:inline">{campaign.name}</span>
+          <span className="hidden max-w-[16rem] truncate text-sm text-muted-foreground sm:inline">
+            {campaign.name}
+          </span>
           <StatusBadge status={campaign.status} />
         </div>
       </div>
 
-      <nav aria-label={m.flow.stepLabel(Math.max(currentIndex, 0) + 1, FLOW_STEPS.length)} className="mb-10 border-y border-border">
+      <nav
+        aria-label={m.flow.stepLabel(Math.max(currentIndex, 0) + 1, FLOW_STEPS.length)}
+        className="mb-10 border-y border-border"
+      >
         <ol className="-mx-1 flex overflow-x-auto py-1">
           {FLOW_STEPS.map((step, index) => {
             const active = index === currentIndex;

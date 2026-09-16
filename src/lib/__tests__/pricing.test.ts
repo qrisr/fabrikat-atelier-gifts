@@ -6,7 +6,11 @@ import { LOGO_SETUP_FEE, SHIPPING_PER_RECIPIENT_CH, estimateCost } from "@/lib/p
 
 describe("estimateCost", () => {
   it("multiplies the set price by recipients", () => {
-    const cost = estimateCost({ templateId: "schreibtisch", personalization: defaultPersonalization(), recipients: 25 });
+    const cost = estimateCost({
+      templateId: "schreibtisch",
+      personalization: defaultPersonalization(),
+      recipients: 25,
+    });
     expect(cost.setsTotal).toBe(3625);
     expect(cost.perRecipient).toBe(145);
     expect(cost.shippingTotal).toBe(25 * SHIPPING_PER_RECIPIENT_CH);
@@ -22,7 +26,10 @@ describe("estimateCost", () => {
         stickerId: "christmas",
         cardId: "letterpress",
         logoDataUrl: "data:image/png;base64,xx",
-        engravings: { "sd-notebook": { enabled: true, text: "AK" }, "sd-pen": { enabled: false, text: "" } },
+        engravings: {
+          "sd-notebook": { enabled: true, text: "AK" },
+          "sd-pen": { enabled: false, text: "" },
+        },
       },
     });
     expect(cost.perRecipient).toBe(145 + 6.5 + 0.8 + 3.5 + 16);
@@ -34,7 +41,10 @@ describe("estimateCost", () => {
     const cost = estimateCost({
       templateId: "winterabend",
       recipients: 1,
-      personalization: { ...defaultPersonalization(), engravings: { "sd-pen": { enabled: true, text: "X" } } },
+      personalization: {
+        ...defaultPersonalization(),
+        engravings: { "sd-pen": { enabled: true, text: "X" } },
+      },
     });
     expect(cost.engravingPerRecipient).toBe(0);
   });

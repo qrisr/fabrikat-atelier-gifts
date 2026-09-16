@@ -10,9 +10,15 @@ export const Route = createFileRoute("/templates")({
   head: () => ({
     meta: [
       { title: "Gift Templates — Fabrikat Gift Atelier" },
-      { name: "description", content: "Explore curated Swiss gift sets for your company recipients." },
+      {
+        name: "description",
+        content: "Explore curated Swiss gift sets for your company recipients.",
+      },
       { property: "og:title", content: "Gift Templates — Fabrikat Gift Atelier" },
-      { property: "og:description", content: "Explore curated Swiss gift sets for your company recipients." },
+      {
+        property: "og:description",
+        content: "Explore curated Swiss gift sets for your company recipients.",
+      },
     ],
   }),
   component: Page,

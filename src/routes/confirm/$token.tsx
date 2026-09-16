@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SearchX } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { ConfirmForm } from "@/components/recipients/confirm-form";
+import { getRepository } from "@/lib/data";
+import type { ConfirmationData } from "@/lib/data/types";
 import { useI18n } from "@/lib/i18n";
-import { actions, useAppState } from "@/lib/store";
+import { actions, getState } from "@/lib/store";
 
 export const Route = createFileRoute("/confirm/$token")({
   head: () => ({
@@ -18,23 +21,42 @@ export const Route = createFileRoute("/confirm/$token")({
 function ConfirmPage() {
   const { m } = useI18n();
   const { token } = Route.useParams();
-  const state = useAppState();
-  const recipient = state.recipients.find((r) => r.token === token);
-  const campaign = state.campaigns.find((c) => c.id === recipient?.campaignId || c.shareToken === token);
-  const company = state.companies.find((c) => c.id === campaign?.companyId);
+  const [context, setContext] = useState<ConfirmationData | null | undefined>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    void getRepository()
+      .getConfirmation(token, getState())
+      .then((data) => {
+        if (!cancelled) setContext(data);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   return (
     <div className="min-h-screen bg-background px-4 py-8 sm:py-16">
       <main className="mx-auto w-full max-w-lg rounded-sm border border-border bg-card px-5 py-8 shadow-[0_30px_60px_-45px_rgba(58,46,37,0.5)] sm:px-10 sm:py-12">
-        {campaign ? (
+        {context === undefined ? (
+          <p className="py-16 text-center text-sm text-muted-foreground" role="status">
+            {m.app.loading}
+          </p>
+        ) : context ? (
           <ConfirmForm
-            campaign={campaign}
-            company={company}
-            recipient={recipient}
-            onSubmit={(payload) => {
-              const result = actions.confirmAddress(token, payload);
-              if (result.ok) return { ok: true };
-              return { ok: false, error: result.reason === "closed" ? m.confirm.closedBody : m.confirm.notFoundBody };
+            context={context}
+            onSubmit={async (payload) => {
+              const result = await actions.confirmAddress(token, payload);
+              if (result === "confirmed") return { ok: true };
+              return {
+                ok: false,
+                error:
+                  result === "closed"
+                    ? m.confirm.closedBody
+                    : result === "not_found"
+                      ? m.confirm.notFoundBody
+                      : m.confirm.submitError,
+              };
             }}
           />
         ) : (

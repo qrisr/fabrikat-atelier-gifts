@@ -4,8 +4,11 @@ import { CSV_TEMPLATE, importRecipientsCsv, parseCsvText } from "@/lib/csv";
 
 describe("parseCsvText", () => {
   it("handles semicolons, quotes, BOM and CRLF", () => {
-    const rows = parseCsvText('﻿a;b\r\n"x; y";"he said ""hi"""\r\n');
-    expect(rows).toEqual([["a", "b"], ["x; y", 'he said "hi"']]);
+    const rows = parseCsvText('\uFEFFa;b\r\n"x; y";"he said ""hi"""\r\n');
+    expect(rows).toEqual([
+      ["a", "b"],
+      ["x; y", 'he said "hi"'],
+    ]);
   });
 });
 
@@ -23,7 +26,9 @@ describe("importRecipientsCsv", () => {
   });
 
   it("accepts German headers with commas", () => {
-    const result = importRecipientsCsv("Vorname,Nachname,E-Mail,PLZ,Ort\nAnna,Keller,anna@alpen.ch,6003,Luzern\n");
+    const result = importRecipientsCsv(
+      "Vorname,Nachname,E-Mail,PLZ,Ort\nAnna,Keller,anna@alpen.ch,6003,Luzern\n",
+    );
     expect(result.problems).toEqual([]);
     expect(result.rows[0]?.address.postalCode).toBe("6003");
   });
@@ -59,7 +64,9 @@ describe("importRecipientsCsv", () => {
   });
 
   it("skips emails already in the campaign", () => {
-    const result = importRecipientsCsv("first_name;last_name;email\nLea;Meier;lea@x.ch", ["lea@x.ch"]);
+    const result = importRecipientsCsv("first_name;last_name;email\nLea;Meier;lea@x.ch", [
+      "lea@x.ch",
+    ]);
     expect(result.rows).toHaveLength(0);
     expect(result.problems[0]).toMatchObject({ kind: "duplicate_email" });
   });

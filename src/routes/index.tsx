@@ -16,9 +16,15 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Campaign Dashboard — Fabrikat Gift Atelier" },
-      { name: "description", content: "Plan and manage premium year-end gifting campaigns with Fabrikat." },
+      {
+        name: "description",
+        content: "Plan and manage premium year-end gifting campaigns with Fabrikat.",
+      },
       { property: "og:title", content: "Campaign Dashboard — Fabrikat Gift Atelier" },
-      { property: "og:description", content: "Plan and manage premium year-end gifting campaigns with Fabrikat." },
+      {
+        property: "og:description",
+        content: "Plan and manage premium year-end gifting campaigns with Fabrikat.",
+      },
     ],
   }),
   component: Dashboard,
@@ -69,7 +75,8 @@ function Dashboard() {
               {m.dashboard.listTitle}
             </h2>
             <p className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Sparkles className="size-3.5 text-brand" /> {m.dashboard.season} · {m.dashboard.count(campaigns.length)}
+              <Sparkles className="size-3.5 text-brand" /> {m.dashboard.season} ·{" "}
+              {m.dashboard.count(campaigns.length)}
             </p>
           </div>
           <ul className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
@@ -112,9 +119,17 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
         </p>
         <h3 className="mt-2 font-display text-2xl leading-tight">{campaign.name}</h3>
         <dl className="mt-6 grid grid-cols-3 gap-4 border-t border-border pt-5 text-sm">
-          <Meta icon={CalendarDays} label={m.dashboard.delivery} value={date(campaign.deliveryDate)} />
+          <Meta
+            icon={CalendarDays}
+            label={m.dashboard.delivery}
+            value={date(campaign.deliveryDate)}
+          />
           <Meta icon={Users} label={m.dashboard.recipients} value={number(count)} />
-          <Meta icon={Wallet} label={m.dashboard.budget} value={chf(campaign.budgetPerRecipient, { decimals: false })} />
+          <Meta
+            icon={Wallet}
+            label={m.dashboard.budget}
+            value={chf(campaign.budgetPerRecipient, { decimals: false })}
+          />
         </dl>
         <Link
           to={`/campaigns/$campaignId/${next.step}`}

@@ -78,7 +78,10 @@ const teaPreference = {
   options: [
     { id: "alpine-herbs", label: { de: "Alpenkräuter", en: "Alpine herbs" } },
     { id: "black-winter", label: { de: "Schwarztee Winterapfel", en: "Black tea, winter apple" } },
-    { id: "rooibos", label: { de: "Rooibos Vanille (koffeinfrei)", en: "Rooibos vanilla (caffeine-free)" } },
+    {
+      id: "rooibos",
+      label: { de: "Rooibos Vanille (koffeinfrei)", en: "Rooibos vanilla (caffeine-free)" },
+    },
   ],
 };
 
@@ -104,10 +107,31 @@ export const GIFT_TEMPLATES: GiftTemplate[] = [
     price: 89,
     tone: "#EADFCB",
     items: [
-      { id: "wa-candle", kind: "candle", name: { de: "Bienenwachskerze", en: "Beeswax candle" }, maker: "Imkerei Rüegsau" },
-      { id: "wa-tea", kind: "tea", name: { de: "Bio-Tee in der Dose", en: "Organic tea tin" }, maker: "Erboristi Ticino", preference: teaPreference },
-      { id: "wa-napkin", kind: "napkin", name: { de: "Leinenserviette", en: "Linen napkin" }, maker: "Weberei Langenthal" },
-      { id: "wa-matches", kind: "matches", name: { de: "Zündhölzer", en: "Safety matches" }, maker: "Fabrikat Edition" },
+      {
+        id: "wa-candle",
+        kind: "candle",
+        name: { de: "Bienenwachskerze", en: "Beeswax candle" },
+        maker: "Imkerei Rüegsau",
+      },
+      {
+        id: "wa-tea",
+        kind: "tea",
+        name: { de: "Bio-Tee in der Dose", en: "Organic tea tin" },
+        maker: "Erboristi Ticino",
+        preference: teaPreference,
+      },
+      {
+        id: "wa-napkin",
+        kind: "napkin",
+        name: { de: "Leinenserviette", en: "Linen napkin" },
+        maker: "Weberei Langenthal",
+      },
+      {
+        id: "wa-matches",
+        kind: "matches",
+        name: { de: "Zündhölzer", en: "Safety matches" },
+        maker: "Fabrikat Edition",
+      },
     ],
   },
   {
@@ -121,9 +145,29 @@ export const GIFT_TEMPLATES: GiftTemplate[] = [
     price: 145,
     tone: "#E3D6C2",
     items: [
-      { id: "sd-pen", kind: "pen", name: { de: "Messing-Kugelschreiber", en: "Brass ballpoint pen" }, maker: "Fabrikat Edition", engravingSurcharge: 14, engravingMaxLength: 12 },
-      { id: "sd-notebook", kind: "notebook", name: { de: "Notizbuch mit Ledereinband", en: "Leather-bound notebook" }, maker: "Buchbinderei Bern", engravingSurcharge: 16, engravingMaxLength: 3, preference: notebookPreference },
-      { id: "sd-pouch", kind: "pouch", name: { de: "Bleistift-Etui aus Canvas", en: "Canvas pencil pouch" }, maker: "Atelier Zürich" },
+      {
+        id: "sd-pen",
+        kind: "pen",
+        name: { de: "Messing-Kugelschreiber", en: "Brass ballpoint pen" },
+        maker: "Fabrikat Edition",
+        engravingSurcharge: 14,
+        engravingMaxLength: 12,
+      },
+      {
+        id: "sd-notebook",
+        kind: "notebook",
+        name: { de: "Notizbuch mit Ledereinband", en: "Leather-bound notebook" },
+        maker: "Buchbinderei Bern",
+        engravingSurcharge: 16,
+        engravingMaxLength: 3,
+        preference: notebookPreference,
+      },
+      {
+        id: "sd-pouch",
+        kind: "pouch",
+        name: { de: "Bleistift-Etui aus Canvas", en: "Canvas pencil pouch" },
+        maker: "Atelier Zürich",
+      },
     ],
   },
   {
@@ -137,9 +181,26 @@ export const GIFT_TEMPLATES: GiftTemplate[] = [
     price: 168,
     tone: "#DCD3C4",
     items: [
-      { id: "wz-knife", kind: "knife", name: { de: "Taschenmesser Nussbaum", en: "Walnut pocket knife" }, maker: "Messerschmiede Schwyz", engravingSurcharge: 18, engravingMaxLength: 4 },
-      { id: "wz-stone", kind: "whetstone", name: { de: "Abziehstein", en: "Whetstone" }, maker: "Fabrikat Edition" },
-      { id: "wz-pouch", kind: "pouch", name: { de: "Gewachstes Canvas-Etui", en: "Waxed canvas pouch" }, maker: "Atelier Zürich" },
+      {
+        id: "wz-knife",
+        kind: "knife",
+        name: { de: "Taschenmesser Nussbaum", en: "Walnut pocket knife" },
+        maker: "Messerschmiede Schwyz",
+        engravingSurcharge: 18,
+        engravingMaxLength: 4,
+      },
+      {
+        id: "wz-stone",
+        kind: "whetstone",
+        name: { de: "Abziehstein", en: "Whetstone" },
+        maker: "Fabrikat Edition",
+      },
+      {
+        id: "wz-pouch",
+        kind: "pouch",
+        name: { de: "Gewachstes Canvas-Etui", en: "Waxed canvas pouch" },
+        maker: "Atelier Zürich",
+      },
     ],
   },
   {
@@ -153,9 +214,24 @@ export const GIFT_TEMPLATES: GiftTemplate[] = [
     price: 72,
     tone: "#EFE3CF",
     items: [
-      { id: "vo-honey", kind: "honey", name: { de: "Walliser Blütenhonig", en: "Valais blossom honey" }, maker: "Bienen Saas" },
-      { id: "vo-choc", kind: "chocolate", name: { de: "Tafelschokolade 70 %", en: "Dark chocolate bar 70%" }, maker: "Chocolaterie Zürich" },
-      { id: "vo-mug", kind: "mug", name: { de: "Emaille-Becher", en: "Enamel mug" }, maker: "Fabrikat Edition" },
+      {
+        id: "vo-honey",
+        kind: "honey",
+        name: { de: "Walliser Blütenhonig", en: "Valais blossom honey" },
+        maker: "Bienen Saas",
+      },
+      {
+        id: "vo-choc",
+        kind: "chocolate",
+        name: { de: "Tafelschokolade 70 %", en: "Dark chocolate bar 70%" },
+        maker: "Chocolaterie Zürich",
+      },
+      {
+        id: "vo-mug",
+        kind: "mug",
+        name: { de: "Emaille-Becher", en: "Enamel mug" },
+        maker: "Fabrikat Edition",
+      },
     ],
   },
   {
@@ -169,37 +245,158 @@ export const GIFT_TEMPLATES: GiftTemplate[] = [
     price: 240,
     tone: "#E6DCCB",
     items: [
-      { id: "ga-pen", kind: "pen", name: { de: "Messing-Kugelschreiber", en: "Brass ballpoint pen" }, maker: "Fabrikat Edition", engravingSurcharge: 14, engravingMaxLength: 12 },
-      { id: "ga-notebook", kind: "notebook", name: { de: "Notizbuch mit Ledereinband", en: "Leather-bound notebook" }, maker: "Buchbinderei Bern", engravingSurcharge: 16, engravingMaxLength: 3, preference: notebookPreference },
-      { id: "ga-candle", kind: "candle", name: { de: "Bienenwachskerze", en: "Beeswax candle" }, maker: "Imkerei Rüegsau" },
-      { id: "ga-tea", kind: "tea", name: { de: "Bio-Tee in der Dose", en: "Organic tea tin" }, maker: "Erboristi Ticino", preference: teaPreference },
+      {
+        id: "ga-pen",
+        kind: "pen",
+        name: { de: "Messing-Kugelschreiber", en: "Brass ballpoint pen" },
+        maker: "Fabrikat Edition",
+        engravingSurcharge: 14,
+        engravingMaxLength: 12,
+      },
+      {
+        id: "ga-notebook",
+        kind: "notebook",
+        name: { de: "Notizbuch mit Ledereinband", en: "Leather-bound notebook" },
+        maker: "Buchbinderei Bern",
+        engravingSurcharge: 16,
+        engravingMaxLength: 3,
+        preference: notebookPreference,
+      },
+      {
+        id: "ga-candle",
+        kind: "candle",
+        name: { de: "Bienenwachskerze", en: "Beeswax candle" },
+        maker: "Imkerei Rüegsau",
+      },
+      {
+        id: "ga-tea",
+        kind: "tea",
+        name: { de: "Bio-Tee in der Dose", en: "Organic tea tin" },
+        maker: "Erboristi Ticino",
+        preference: teaPreference,
+      },
     ],
   },
 ];
 
 export const WRAPPINGS: WrappingOption[] = [
-  { id: "kraft-natural", name: { de: "Kraftpapier natur", en: "Natural kraft" }, description: { de: "Ungebleicht, mit Baumwollkordel", en: "Unbleached, with cotton cord" }, surcharge: 0, paper: "#C9A77C", ribbon: "#F4EDE1", pattern: "plain" },
-  { id: "linen-cream", name: { de: "Leinenstruktur Creme", en: "Cream linen" }, description: { de: "Strukturpapier mit Seidenband", en: "Textured paper, silk ribbon" }, surcharge: 4.5, paper: "#EFE6D6", ribbon: "#8A5A3C", pattern: "linen" },
-  { id: "forest", name: { de: "Tannengrün", en: "Fir green" }, description: { de: "Tiefgrünes Papier, Goldkordel", en: "Deep green paper, gold cord" }, surcharge: 3, paper: "#3E5245", ribbon: "#C8A96A", pattern: "plain" },
-  { id: "midnight", name: { de: "Nachtblau gepunktet", en: "Midnight dots" }, description: { de: "Blau mit feinem Punktdruck", en: "Blue with a fine dot print" }, surcharge: 3, paper: "#2F3A4E", ribbon: "#E9E1D2", pattern: "dots" },
-  { id: "gold-foil", name: { de: "Goldprägung", en: "Gold foil" }, description: { de: "Handgeprägt im Atelier", en: "Hand-foiled in the atelier" }, surcharge: 6.5, paper: "#E7DCC8", ribbon: "#B08D57", pattern: "foil" },
+  {
+    id: "kraft-natural",
+    name: { de: "Kraftpapier natur", en: "Natural kraft" },
+    description: { de: "Ungebleicht, mit Baumwollkordel", en: "Unbleached, with cotton cord" },
+    surcharge: 0,
+    paper: "#C9A77C",
+    ribbon: "#F4EDE1",
+    pattern: "plain",
+  },
+  {
+    id: "linen-cream",
+    name: { de: "Leinenstruktur Creme", en: "Cream linen" },
+    description: { de: "Strukturpapier mit Seidenband", en: "Textured paper, silk ribbon" },
+    surcharge: 4.5,
+    paper: "#EFE6D6",
+    ribbon: "#8A5A3C",
+    pattern: "linen",
+  },
+  {
+    id: "forest",
+    name: { de: "Tannengrün", en: "Fir green" },
+    description: { de: "Tiefgrünes Papier, Goldkordel", en: "Deep green paper, gold cord" },
+    surcharge: 3,
+    paper: "#3E5245",
+    ribbon: "#C8A96A",
+    pattern: "plain",
+  },
+  {
+    id: "midnight",
+    name: { de: "Nachtblau gepunktet", en: "Midnight dots" },
+    description: { de: "Blau mit feinem Punktdruck", en: "Blue with a fine dot print" },
+    surcharge: 3,
+    paper: "#2F3A4E",
+    ribbon: "#E9E1D2",
+    pattern: "dots",
+  },
+  {
+    id: "gold-foil",
+    name: { de: "Goldprägung", en: "Gold foil" },
+    description: { de: "Handgeprägt im Atelier", en: "Hand-foiled in the atelier" },
+    surcharge: 6.5,
+    paper: "#E7DCC8",
+    ribbon: "#B08D57",
+    pattern: "foil",
+  },
 ];
 
 export const STICKERS: StickerOption[] = [
-  { id: "none", name: { de: "Ohne Sticker", en: "No sticker" }, surcharge: 0, motif: "none", color: "transparent" },
-  { id: "christmas", name: { de: "Weihnachtsstern", en: "Christmas star" }, surcharge: 0.8, motif: "star", color: "#9C3B2E" },
-  { id: "winter-forest", name: { de: "Winterwald", en: "Winter forest" }, surcharge: 0.8, motif: "fir", color: "#3E5245" },
-  { id: "alpine", name: { de: "Alpenkette", en: "Alpine peaks" }, surcharge: 0.8, motif: "peaks", color: "#2F3A4E" },
-  { id: "merci", name: { de: "Merci", en: "Merci" }, surcharge: 0.8, motif: "merci", color: "#8A5A3C" },
+  {
+    id: "none",
+    name: { de: "Ohne Sticker", en: "No sticker" },
+    surcharge: 0,
+    motif: "none",
+    color: "transparent",
+  },
+  {
+    id: "christmas",
+    name: { de: "Weihnachtsstern", en: "Christmas star" },
+    surcharge: 0.8,
+    motif: "star",
+    color: "#9C3B2E",
+  },
+  {
+    id: "winter-forest",
+    name: { de: "Winterwald", en: "Winter forest" },
+    surcharge: 0.8,
+    motif: "fir",
+    color: "#3E5245",
+  },
+  {
+    id: "alpine",
+    name: { de: "Alpenkette", en: "Alpine peaks" },
+    surcharge: 0.8,
+    motif: "peaks",
+    color: "#2F3A4E",
+  },
+  {
+    id: "merci",
+    name: { de: "Merci", en: "Merci" },
+    surcharge: 0.8,
+    motif: "merci",
+    color: "#8A5A3C",
+  },
 ];
 
 export const CARDS: CardOption[] = [
-  { id: "classic", name: { de: "Klassisch", en: "Classic" }, description: { de: "Digitaldruck auf Naturkarton", en: "Digital print on natural board" }, surcharge: 0, stock: "#F7F2E8" },
-  { id: "letterpress", name: { de: "Letterpress", en: "Letterpress" }, description: { de: "Buchdruck mit spürbarer Prägung", en: "Letterpress with a tactile impression" }, surcharge: 3.5, stock: "#FBF8F1" },
-  { id: "deckle", name: { de: "Büttenrand", en: "Deckle edge" }, description: { de: "Handgeschöpftes Papier mit Büttenrand", en: "Handmade paper with a deckle edge" }, surcharge: 5, stock: "#F3ECDD" },
+  {
+    id: "classic",
+    name: { de: "Klassisch", en: "Classic" },
+    description: { de: "Digitaldruck auf Naturkarton", en: "Digital print on natural board" },
+    surcharge: 0,
+    stock: "#F7F2E8",
+  },
+  {
+    id: "letterpress",
+    name: { de: "Letterpress", en: "Letterpress" },
+    description: {
+      de: "Buchdruck mit spürbarer Prägung",
+      en: "Letterpress with a tactile impression",
+    },
+    surcharge: 3.5,
+    stock: "#FBF8F1",
+  },
+  {
+    id: "deckle",
+    name: { de: "Büttenrand", en: "Deckle edge" },
+    description: {
+      de: "Handgeschöpftes Papier mit Büttenrand",
+      en: "Handmade paper with a deckle edge",
+    },
+    surcharge: 5,
+    stock: "#F3ECDD",
+  },
 ];
 
-export const findTemplate = (id: string | null | undefined) => GIFT_TEMPLATES.find((t) => t.id === id);
+export const findTemplate = (id: string | null | undefined) =>
+  GIFT_TEMPLATES.find((t) => t.id === id);
 export const findWrapping = (id: string) => WRAPPINGS.find((w) => w.id === id) ?? WRAPPINGS[0]!;
 export const findSticker = (id: string) => STICKERS.find((s) => s.id === id) ?? STICKERS[0]!;
 export const findCard = (id: string) => CARDS.find((c) => c.id === id) ?? CARDS[0]!;

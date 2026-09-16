@@ -154,7 +154,8 @@ export function ProductArt({
   crop?: boolean;
 }) {
   const items = template.items.slice(0, 4);
-  const total = items.reduce((sum, item) => sum + drawings[item.kind].width, 0) + (items.length - 1) * 14;
+  const total =
+    items.reduce((sum, item) => sum + drawings[item.kind].width, 0) + (items.length - 1) * 14;
   let cursor = 200 - total / 2;
 
   return (

@@ -14,7 +14,10 @@ export const Route = createFileRoute("/quote-review")({
   head: () => ({
     meta: [
       { title: "Quote Review — Fabrikat Gift Atelier" },
-      { name: "description", content: "Review the details and quotation for your Fabrikat gifting campaign." },
+      {
+        name: "description",
+        content: "Review the details and quotation for your Fabrikat gifting campaign.",
+      },
     ],
   }),
   component: Page,

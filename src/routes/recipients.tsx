@@ -14,7 +14,10 @@ export const Route = createFileRoute("/recipients")({
   head: () => ({
     meta: [
       { title: "Recipient Manager — Fabrikat Gift Atelier" },
-      { name: "description", content: "Collect and confirm recipient addresses for your Fabrikat gifting campaign." },
+      {
+        name: "description",
+        content: "Collect and confirm recipient addresses for your Fabrikat gifting campaign.",
+      },
     ],
   }),
   component: Page,

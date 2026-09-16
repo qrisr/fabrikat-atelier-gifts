@@ -6,19 +6,62 @@
 import type { RecipientInput } from "@/lib/store";
 import { isCanton, isEmail, isSwissPostalCode } from "@/lib/swiss";
 
-export const CSV_COLUMNS = ["first_name", "last_name", "email", "company", "street", "postal_code", "city", "canton"] as const;
+export const CSV_COLUMNS = [
+  "first_name",
+  "last_name",
+  "email",
+  "company",
+  "street",
+  "postal_code",
+  "city",
+  "canton",
+] as const;
 export type CsvColumn = (typeof CSV_COLUMNS)[number];
 export const REQUIRED_COLUMNS: CsvColumn[] = ["first_name", "last_name", "email"];
 
 const ALIASES: Record<string, CsvColumn> = {
-  first_name: "first_name", firstname: "first_name", "first name": "first_name", vorname: "first_name", prenom: "first_name", prénom: "first_name",
-  last_name: "last_name", lastname: "last_name", "last name": "last_name", surname: "last_name", nachname: "last_name", name: "last_name", nom: "last_name",
-  email: "email", "e-mail": "email", mail: "email", "email address": "email", "e-mail-adresse": "email",
-  company: "company", firma: "company", unternehmen: "company", organisation: "company",
-  street: "street", strasse: "street", straße: "street", adresse: "street", address: "street", "strasse und nr.": "street",
-  postal_code: "postal_code", zip: "postal_code", "zip code": "postal_code", postcode: "postal_code", plz: "postal_code", npa: "postal_code",
-  city: "city", ort: "city", stadt: "city", town: "city", ville: "city",
-  canton: "canton", kanton: "canton", state: "canton",
+  first_name: "first_name",
+  firstname: "first_name",
+  "first name": "first_name",
+  vorname: "first_name",
+  prenom: "first_name",
+  prénom: "first_name",
+  last_name: "last_name",
+  lastname: "last_name",
+  "last name": "last_name",
+  surname: "last_name",
+  nachname: "last_name",
+  name: "last_name",
+  nom: "last_name",
+  email: "email",
+  "e-mail": "email",
+  mail: "email",
+  "email address": "email",
+  "e-mail-adresse": "email",
+  company: "company",
+  firma: "company",
+  unternehmen: "company",
+  organisation: "company",
+  street: "street",
+  strasse: "street",
+  straße: "street",
+  adresse: "street",
+  address: "street",
+  "strasse und nr.": "street",
+  postal_code: "postal_code",
+  zip: "postal_code",
+  "zip code": "postal_code",
+  postcode: "postal_code",
+  plz: "postal_code",
+  npa: "postal_code",
+  city: "city",
+  ort: "city",
+  stadt: "city",
+  town: "city",
+  ville: "city",
+  canton: "canton",
+  kanton: "canton",
+  state: "canton",
 };
 
 export type CsvProblem =
@@ -39,9 +82,14 @@ export type CsvResult = {
 };
 
 export function parseCsvText(text: string): string[][] {
-  const clean = text.replace(/^﻿/, "");
+  const clean = text.replace(/^\uFEFF/, "");
   const firstLine = clean.split(/\r?\n/, 1)[0] ?? "";
-  const delimiter = count(firstLine, ";") > count(firstLine, ",") ? ";" : count(firstLine, "\t") > count(firstLine, ",") ? "\t" : ",";
+  const delimiter =
+    count(firstLine, ";") > count(firstLine, ",")
+      ? ";"
+      : count(firstLine, "\t") > count(firstLine, ",")
+        ? "\t"
+        : ",";
   const rows: string[][] = [];
   let row: string[] = [];
   let field = "";
@@ -85,16 +133,25 @@ const count = (value: string, char: string) => value.split(char).length - 1;
 export function importRecipientsCsv(text: string, existingEmails: string[] = []): CsvResult {
   const table = parseCsvText(text);
   const nonBlankTable = table.filter((cells) => cells.some((c) => c.trim() !== ""));
-  if (nonBlankTable.length === 0) return { rows: [], problems: [{ kind: "empty_file" }], fatal: true };
+  if (nonBlankTable.length === 0)
+    return { rows: [], problems: [{ kind: "empty_file" }], fatal: true };
 
   const headerCells = table.find((cells) => cells.some((c) => c.trim() !== "")) ?? [];
   const headerIndex = table.indexOf(headerCells);
-  const mapping = headerCells.map((cell) => ALIASES[cell.trim().toLowerCase().replace(/\s+/g, " ")]);
+  const mapping = headerCells.map(
+    (cell) => ALIASES[cell.trim().toLowerCase().replace(/\s+/g, " ")],
+  );
   const missing = REQUIRED_COLUMNS.filter((col) => !mapping.includes(col));
   if (missing.length > 0) {
     return {
       rows: [],
-      problems: [{ kind: "missing_headers", missing, found: headerCells.map((c) => c.trim()).filter(Boolean) }],
+      problems: [
+        {
+          kind: "missing_headers",
+          missing,
+          found: headerCells.map((c) => c.trim()).filter(Boolean),
+        },
+      ],
       fatal: true,
     };
   }
@@ -108,7 +165,8 @@ export function importRecipientsCsv(text: string, existingEmails: string[] = [])
     const isBlank = cells.every((c) => c.trim() === "");
     if (isBlank) {
       // Trailing newline at the end of a file is not a problem.
-      if (offset < table.length - headerIndex - 2 || cells.length > 1) problems.push({ kind: "empty_row", line });
+      if (offset < table.length - headerIndex - 2 || cells.length > 1)
+        problems.push({ kind: "empty_row", line });
       return;
     }
     const get = (col: CsvColumn) => {
@@ -149,7 +207,12 @@ export function importRecipientsCsv(text: string, existingEmails: string[] = [])
       lastName: get("last_name"),
       email,
       company: get("company"),
-      address: { street: get("street"), postalCode, city: get("city"), canton: canton.toUpperCase() },
+      address: {
+        street: get("street"),
+        postalCode,
+        city: get("city"),
+        canton: canton.toUpperCase(),
+      },
       preferences: {},
     });
   });

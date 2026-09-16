@@ -7,7 +7,13 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { OCCASIONS, type Occasion } from "@/lib/domain";
 import { useI18n } from "@/lib/i18n";
 import type { Messages } from "@/lib/messages/en";
@@ -32,7 +38,10 @@ export function detailsSchema(m: Messages, options: { enforceLeadTime: boolean }
     deliveryDate: z
       .string()
       .min(1, m.details.errors.dateRequired)
-      .refine((value) => !options.enforceLeadTime || value >= earliestDeliveryDate(), m.details.errors.datePast),
+      .refine(
+        (value) => !options.enforceLeadTime || value >= earliestDeliveryDate(),
+        m.details.errors.datePast,
+      ),
   });
 }
 
@@ -70,7 +79,12 @@ export function CampaignDetailsForm({
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} method="post" className="grid gap-8" noValidate>
       <fieldset disabled={disabled} className="grid gap-8 disabled:opacity-70">
-        <Field id="name" label={m.details.name} hint={m.details.nameHint} error={errors.name?.message}>
+        <Field
+          id="name"
+          label={m.details.name}
+          hint={m.details.nameHint}
+          error={errors.name?.message}
+        >
           <Input id="name" placeholder={m.details.namePlaceholder} {...form.register("name")} />
         </Field>
 
@@ -79,7 +93,11 @@ export function CampaignDetailsForm({
             control={form.control}
             name="occasion"
             render={({ field }) => (
-              <Select value={field.value} onValueChange={(value) => field.onChange(value as Occasion)} disabled={disabled}>
+              <Select
+                value={field.value}
+                onValueChange={(value) => field.onChange(value as Occasion)}
+                disabled={disabled}
+              >
                 <SelectTrigger id="occasion">
                   <SelectValue>{m.occasion[field.value]}</SelectValue>
                 </SelectTrigger>
@@ -102,7 +120,13 @@ export function CampaignDetailsForm({
             hint={m.details.recipientsHint}
             error={errors.recipientEstimate?.message}
           >
-            <Input id="recipientEstimate" type="number" inputMode="numeric" min={1} {...form.register("recipientEstimate")} />
+            <Input
+              id="recipientEstimate"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              {...form.register("recipientEstimate")}
+            />
           </Field>
           <Field
             id="budgetPerRecipient"
@@ -127,8 +151,19 @@ export function CampaignDetailsForm({
           </Field>
         </div>
 
-        <Field id="deliveryDate" label={m.details.delivery} hint={m.details.deliveryHint} error={errors.deliveryDate?.message}>
-          <Input id="deliveryDate" type="date" lang="de-CH" className="sm:max-w-xs" {...form.register("deliveryDate")} />
+        <Field
+          id="deliveryDate"
+          label={m.details.delivery}
+          hint={m.details.deliveryHint}
+          error={errors.deliveryDate?.message}
+        >
+          <Input
+            id="deliveryDate"
+            type="date"
+            lang="de-CH"
+            className="sm:max-w-xs"
+            {...form.register("deliveryDate")}
+          />
         </Field>
       </fieldset>
 
